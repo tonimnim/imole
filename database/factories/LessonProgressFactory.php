@@ -1,0 +1,36 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+use App\Models\Enrollment;
+use App\Models\Lesson;
+use App\Models\LessonProgress;
+use App\Models\User;
+
+class LessonProgressFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = LessonProgress::class;
+
+    /**
+     * Define the model's default state.
+     */
+    public function definition(): array
+    {
+        return [
+            'user_id' => User::factory(),
+            'lesson_id' => Lesson::factory(),
+            'enrollment_id' => Enrollment::factory(),
+            'is_completed' => fake()->boolean(),
+            'completed_at' => fake()->dateTime(),
+            'time_spent_seconds' => fake()->numberBetween(-10000, 10000),
+            'last_position_seconds' => fake()->numberBetween(-10000, 10000),
+        ];
+    }
+}

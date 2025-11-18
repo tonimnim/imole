@@ -1,0 +1,162 @@
+created:
+    - app/Http/Controllers/CourseController.php
+    - app/Http/Controllers/LessonController.php
+    - app/Http/Controllers/EnrollmentController.php
+    - app/Http/Controllers/LessonProgressController.php
+    - app/Http/Controllers/QuizController.php
+    - app/Http/Controllers/QuizAttemptController.php
+    - app/Http/Controllers/AssignmentController.php
+    - app/Http/Controllers/AssignmentSubmissionController.php
+    - app/Http/Controllers/ReviewController.php
+    - app/Http/Controllers/CommentController.php
+    - app/Http/Controllers/PaymentController.php
+    - app/Http/Controllers/WishlistController.php
+    - app/Http/Controllers/Admin/CategoryController.php
+    - database/factories/CategoryFactory.php
+    - database/factories/TagFactory.php
+    - database/factories/CourseFactory.php
+    - database/factories/ModuleFactory.php
+    - database/factories/LessonFactory.php
+    - database/factories/ResourceFactory.php
+    - database/factories/EnrollmentFactory.php
+    - database/factories/LessonProgressFactory.php
+    - database/factories/QuizFactory.php
+    - database/factories/QuestionFactory.php
+    - database/factories/QuizAttemptFactory.php
+    - database/factories/AssignmentFactory.php
+    - database/factories/AssignmentSubmissionFactory.php
+    - database/factories/ReviewFactory.php
+    - database/factories/CommentFactory.php
+    - database/factories/AnnouncementFactory.php
+    - database/factories/PaymentFactory.php
+    - database/factories/CouponFactory.php
+    - database/factories/WishlistFactory.php
+    - database/factories/CertificateFactory.php
+    - database/migrations/2025_11_18_203024_create_categories_table.php
+    - database/migrations/2025_11_18_203025_create_tags_table.php
+    - database/migrations/2025_11_18_203026_create_courses_table.php
+    - database/migrations/2025_11_18_203027_create_modules_table.php
+    - database/migrations/2025_11_18_203028_create_lessons_table.php
+    - database/migrations/2025_11_18_203029_create_resources_table.php
+    - database/migrations/2025_11_18_203030_create_enrollments_table.php
+    - database/migrations/2025_11_18_203031_create_lesson_progress_table.php
+    - database/migrations/2025_11_18_203032_create_quizzes_table.php
+    - database/migrations/2025_11_18_203033_create_questions_table.php
+    - database/migrations/2025_11_18_203034_create_quiz_attempts_table.php
+    - database/migrations/2025_11_18_203035_create_assignments_table.php
+    - database/migrations/2025_11_18_203036_create_assignment_submissions_table.php
+    - database/migrations/2025_11_18_203037_create_reviews_table.php
+    - database/migrations/2025_11_18_203038_create_comments_table.php
+    - database/migrations/2025_11_18_203039_create_announcements_table.php
+    - database/migrations/2025_11_18_203040_create_payments_table.php
+    - database/migrations/2025_11_18_203041_create_coupons_table.php
+    - database/migrations/2025_11_18_203042_create_wishlists_table.php
+    - database/migrations/2025_11_18_203043_create_certificates_table.php
+    - database/migrations/2025_11_18_203044_create_course_tag_table.php
+    - app/Models/Category.php
+    - app/Models/Tag.php
+    - app/Models/Course.php
+    - app/Models/Module.php
+    - app/Models/Lesson.php
+    - app/Models/Resource.php
+    - app/Models/Enrollment.php
+    - app/Models/LessonProgress.php
+    - app/Models/Quiz.php
+    - app/Models/Question.php
+    - app/Models/QuizAttempt.php
+    - app/Models/Assignment.php
+    - app/Models/AssignmentSubmission.php
+    - app/Models/Review.php
+    - app/Models/Comment.php
+    - app/Models/Announcement.php
+    - app/Models/Payment.php
+    - app/Models/Coupon.php
+    - app/Models/Wishlist.php
+    - app/Models/Certificate.php
+    - database/seeders/UserSeeder.php
+    - database/seeders/CategorySeeder.php
+    - database/seeders/TagSeeder.php
+    - database/seeders/CourseSeeder.php
+    - database/seeders/ModuleSeeder.php
+    - database/seeders/LessonSeeder.php
+    - database/seeders/QuizSeeder.php
+    - database/seeders/QuestionSeeder.php
+    - database/seeders/AssignmentSeeder.php
+    - tests/Feature/Http/Controllers/CourseControllerTest.php
+    - tests/Feature/Http/Controllers/LessonControllerTest.php
+    - tests/Feature/Http/Controllers/EnrollmentControllerTest.php
+    - tests/Feature/Http/Controllers/LessonProgressControllerTest.php
+    - tests/Feature/Http/Controllers/QuizControllerTest.php
+    - tests/Feature/Http/Controllers/QuizAttemptControllerTest.php
+    - tests/Feature/Http/Controllers/AssignmentControllerTest.php
+    - tests/Feature/Http/Controllers/AssignmentSubmissionControllerTest.php
+    - tests/Feature/Http/Controllers/ReviewControllerTest.php
+    - tests/Feature/Http/Controllers/CommentControllerTest.php
+    - tests/Feature/Http/Controllers/PaymentControllerTest.php
+    - tests/Feature/Http/Controllers/WishlistControllerTest.php
+    - tests/Feature/Http/Controllers/Admin/CategoryControllerTest.php
+    - app/Events/StudentEnrolled.php
+    - app/Events/QuizAttemptStarted.php
+    - app/Events/CommentPosted.php
+    - app/Http/Requests/CourseStoreRequest.php
+    - app/Http/Requests/CourseUpdateRequest.php
+    - app/Http/Requests/LessonStoreRequest.php
+    - app/Http/Requests/LessonUpdateRequest.php
+    - app/Http/Requests/EnrollmentStoreRequest.php
+    - app/Http/Requests/LessonProgressUpdateRequest.php
+    - app/Http/Requests/QuizStoreRequest.php
+    - app/Http/Requests/QuizAttemptStoreRequest.php
+    - app/Http/Requests/QuizAttemptUpdateRequest.php
+    - app/Http/Requests/AssignmentStoreRequest.php
+    - app/Http/Requests/AssignmentSubmissionStoreRequest.php
+    - app/Http/Requests/AssignmentSubmissionUpdateRequest.php
+    - app/Http/Requests/ReviewStoreRequest.php
+    - app/Http/Requests/CommentStoreRequest.php
+    - app/Http/Requests/PaymentStoreRequest.php
+    - app/Http/Requests/PaymentWebhookRequest.php
+    - app/Http/Requests/WishlistStoreRequest.php
+    - app/Http/Requests/Admin/CategoryStoreRequest.php
+    - app/Http/Requests/Admin/CategoryUpdateRequest.php
+    - app/Jobs/ProcessCourseThumbnail.php
+    - app/Jobs/ProcessLessonVideo.php
+    - app/Jobs/SendEnrollmentConfirmation.php
+    - app/Jobs/UpdateCourseProgress.php
+    - app/Jobs/GradeQuizAttempt.php
+    - app/Jobs/UpdateCourseRating.php
+    - app/Jobs/InitializePaystackPayment.php
+    - app/Jobs/VerifyPaystackPayment.php
+    - app/Jobs/HandlePaystackWebhook.php
+    - app/Notification/AssignmentSubmittedNotification.php
+    - app/Notification/AssignmentGradedNotification.php
+    - resources/views/course/index.blade.php
+    - resources/views/course/show.blade.php
+    - resources/views/lesson/index.blade.php
+    - resources/views/lesson/show.blade.php
+    - resources/views/enrollment/show.blade.php
+    - resources/views/quiz/show.blade.php
+    - resources/views/assignment/show.blade.php
+    - resources/views/payment/show.blade.php
+    - resources/views/admin/category/index.blade.php
+updated:
+    - routes/web.php
+models:
+    Category: { name: 'string:100', slug: 'string:100 unique index', description: 'text nullable', icon: 'string:100 nullable', parent_id: 'id:category nullable foreign', order: 'integer default:0', is_active: 'boolean default:true', relationships: { belongsTo: 'Category:parent', hasMany: 'Category:children, Course' } }
+    Tag: { name: 'string:50 unique', slug: 'string:50 unique index', relationships: { belongsToMany: Course } }
+    Course: { title: 'string:255 index', slug: 'string:255 unique index', subtitle: 'string:255 nullable', description: longtext, objectives: 'text nullable', requirements: 'text nullable', level: 'enum:beginner,intermediate,advanced default:beginner', language: 'string:10 default:en', instructor_id: 'id:user foreign', category_id: 'id:category foreign', thumbnail: 'string:500 nullable', preview_video: 'string:500 nullable', price: 'decimal:10,2 default:0', currency: 'string:3 default:USD', discount_price: 'decimal:10,2 nullable', status: 'enum:draft,pending,published,archived default:draft', is_published: 'boolean default:false', published_at: 'timestamp nullable', duration_minutes: 'integer default:0', lessons_count: 'integer default:0', students_count: 'integer default:0', reviews_count: 'integer default:0', average_rating: 'decimal:3,2 default:0', is_featured: 'boolean default:false', has_certificate: 'boolean default:false', allow_reviews: 'boolean default:true', meta_title: 'string:255 nullable', meta_description: 'text nullable', indexes: [{ index: 'instructor_id, status' }, { index: 'category_id, is_published' }], relationships: { belongsTo: 'User:instructor, Category', hasMany: 'Module, Lesson, Enrollment, Review, Announcement, Quiz, Assignment', belongsToMany: Tag } }
+    Module: { course_id: 'id:course foreign', title: 'string:255', description: 'text nullable', order: 'integer default:0', is_published: 'boolean default:false', relationships: { belongsTo: Course, hasMany: Lesson } }
+    Lesson: { course_id: 'id:course foreign', module_id: 'id:module nullable foreign', title: 'string:255 index', slug: 'string:255', content: longtext, video_url: 'string:500 nullable', video_provider: 'enum:youtube,vimeo,custom nullable', video_duration: 'integer nullable', type: 'enum:video,text,quiz,assignment default:video', duration_minutes: 'integer default:0', order: 'integer default:0', is_free: 'boolean default:false', is_published: 'boolean default:false', indexes: [{ index: 'course_id, order' }], relationships: { belongsTo: 'Course, Module', hasMany: 'LessonProgress, Resource, Comment' } }
+    Resource: { lesson_id: 'id:lesson foreign', title: 'string:255', description: 'text nullable', file_name: 'string:255', file_path: 'string:500', file_type: 'string:50', file_size: integer, download_count: 'integer default:0', order: 'integer default:0', relationships: { belongsTo: Lesson } }
+    Enrollment: { user_id: 'id:user foreign', course_id: 'id:course foreign', enrolled_at: timestamp, started_at: 'timestamp nullable', completed_at: 'timestamp nullable', expires_at: 'timestamp nullable', progress_percentage: 'integer default:0', last_accessed_at: 'timestamp nullable', payment_id: 'id:payment nullable foreign', price_paid: 'decimal:10,2 default:0', status: 'enum:active,completed,expired,cancelled default:active', indexes: [{ unique: 'user_id, course_id' }, { index: 'course_id, status' }], relationships: { belongsTo: 'User, Course, Payment', hasMany: LessonProgress } }
+    LessonProgress: { user_id: 'id:user foreign', lesson_id: 'id:lesson foreign', enrollment_id: 'id:enrollment foreign', is_completed: 'boolean default:false', completed_at: 'timestamp nullable', time_spent_seconds: 'integer default:0', last_position_seconds: 'integer default:0', indexes: [{ unique: 'user_id, lesson_id' }], relationships: { belongsTo: 'User, Lesson, Enrollment' } }
+    Quiz: { course_id: 'id:course foreign', lesson_id: 'id:lesson nullable foreign', title: 'string:255', description: 'text nullable', duration_minutes: 'integer nullable', passing_score: 'integer default:70', max_attempts: 'integer default:3', shuffle_questions: 'boolean default:true', show_correct_answers: 'boolean default:true', is_published: 'boolean default:false', order: 'integer default:0', relationships: { belongsTo: 'Course, Lesson', hasMany: 'Question, QuizAttempt' } }
+    Question: { quiz_id: 'id:quiz foreign', question_text: text, question_type: 'enum:multiple_choice,true_false,short_answer,essay', options: 'json nullable', correct_answer: text, explanation: 'text nullable', points: 'integer default:1', order: 'integer default:0', relationships: { belongsTo: Quiz } }
+    QuizAttempt: { user_id: 'id:user foreign', quiz_id: 'id:quiz foreign', started_at: timestamp, completed_at: 'timestamp nullable', submitted_at: 'timestamp nullable', score: 'decimal:5,2 default:0', total_points: 'integer default:0', earned_points: 'integer default:0', answers: 'json nullable', status: 'enum:in_progress,completed,graded default:in_progress', is_passed: 'boolean default:false', attempt_number: 'integer default:1', indexes: [{ index: 'user_id, quiz_id' }], relationships: { belongsTo: 'User, Quiz' } }
+    Assignment: { course_id: 'id:course foreign', lesson_id: 'id:lesson nullable foreign', title: 'string:255', description: longtext, instructions: 'text nullable', attachments: 'json nullable', max_score: 'integer default:100', max_file_size_mb: 'integer default:10', allowed_file_types: 'string:255 nullable', due_date: 'timestamp nullable', late_submission_allowed: 'boolean default:true', is_published: 'boolean default:false', order: 'integer default:0', relationships: { belongsTo: 'Course, Lesson', hasMany: AssignmentSubmission } }
+    AssignmentSubmission: { assignment_id: 'id:assignment foreign', user_id: 'id:user foreign', content: 'longtext nullable', file_path: 'string:500 nullable', file_name: 'string:255 nullable', score: 'decimal:5,2 nullable', max_score: integer, feedback: 'text nullable', graded_by: 'id:user nullable foreign', graded_at: 'timestamp nullable', submitted_at: timestamp, is_late: 'boolean default:false', status: 'enum:submitted,graded,returned,resubmitted default:submitted', indexes: [{ index: 'assignment_id, user_id' }], relationships: { belongsTo: 'Assignment, User, User:grader' } }
+    Review: { user_id: 'id:user foreign', course_id: 'id:course foreign', rating: integer, title: 'string:255 nullable', comment: 'text nullable', is_approved: 'boolean default:false', approved_at: 'timestamp nullable', helpful_count: 'integer default:0', indexes: [{ unique: 'user_id, course_id' }, { index: 'course_id, is_approved' }], relationships: { belongsTo: 'User, Course' } }
+    Comment: { user_id: 'id:user foreign', lesson_id: 'id:lesson foreign', parent_id: 'id:comment nullable foreign', content: text, is_approved: 'boolean default:false', indexes: [{ index: 'lesson_id, is_approved' }], relationships: { belongsTo: 'User, Lesson, Comment:parent', hasMany: 'Comment:replies' } }
+    Announcement: { course_id: 'id:course foreign', instructor_id: 'id:user foreign', title: 'string:255', content: text, is_published: 'boolean default:false', published_at: 'timestamp nullable', relationships: { belongsTo: 'Course, User:instructor' } }
+    Payment: { user_id: 'id:user foreign', course_id: 'id:course foreign', amount: 'decimal:10,2', currency: 'string:3 default:NGN', payment_method: 'enum:card,bank,ussd,mobile_money,qr default:card', paystack_reference: 'string:255 unique index', paystack_access_code: 'string:255 nullable', paystack_authorization_code: 'string:255 nullable', transaction_id: 'string:255 unique nullable index', reference_code: 'string:100 unique', gateway_response: 'string:255 nullable', channel: 'string:50 nullable', ip_address: 'string:45 nullable', status: 'enum:pending,success,failed,abandoned,refunded default:pending', paid_at: 'timestamp nullable', customer_email: 'string:255', customer_code: 'string:100 nullable', metadata: 'json nullable', indexes: [{ index: 'user_id, status' }, { index: paystack_reference }, { index: 'status, created_at' }], relationships: { belongsTo: 'User, Course', hasOne: Enrollment } }
+    Coupon: { code: 'string:50 unique index', description: 'text nullable', discount_type: 'enum:percentage,fixed', discount_value: 'decimal:10,2', max_discount: 'decimal:10,2 nullable', course_id: 'id:course nullable foreign', category_id: 'id:category nullable foreign', usage_limit: 'integer nullable', usage_count: 'integer default:0', per_user_limit: 'integer default:1', valid_from: timestamp, valid_until: 'timestamp nullable', is_active: 'boolean default:true', relationships: { belongsTo: 'Course, Category' } }
+    Wishlist: { user_id: 'id:user foreign', course_id: 'id:course foreign', indexes: [{ unique: 'user_id, course_id' }], relationships: { belongsTo: 'User, Course' } }
+    Certificate: { user_id: 'id:user foreign', course_id: 'id:course foreign', enrollment_id: 'id:enrollment foreign', certificate_number: 'string:100 unique index', issued_at: timestamp, valid_until: 'timestamp nullable', file_path: 'string:500 nullable', indexes: [{ unique: 'user_id, course_id' }], relationships: { belongsTo: 'User, Course, Enrollment' } }

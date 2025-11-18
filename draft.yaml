@@ -1,0 +1,708 @@
+# ImoleAfrica LMS - Comprehensive Draft
+# Complete Learning Management System for Africa
+
+models:
+  # ============================================
+  # COURSE ORGANIZATION
+  # ============================================
+
+  Category:
+    name: string:100
+    slug: string:100 unique index
+    description: text nullable
+    icon: string:100 nullable
+    parent_id: id:category nullable foreign
+    order: integer default:0
+    is_active: boolean default:true
+    relationships:
+      belongsTo: Category:parent
+      hasMany: Category:children, Course
+
+  Tag:
+    name: string:50 unique
+    slug: string:50 unique index
+    relationships:
+      belongsToMany: Course
+
+  # ============================================
+  # COURSE CONTENT
+  # ============================================
+
+  Course:
+    title: string:255 index
+    slug: string:255 unique index
+    subtitle: string:255 nullable
+    description: longtext
+    objectives: text nullable
+    requirements: text nullable
+    level: enum:beginner,intermediate,advanced default:beginner
+    language: string:10 default:en
+
+    # Instructor & Category
+    instructor_id: id:user foreign
+    category_id: id:category foreign
+
+    # Media
+    thumbnail: string:500 nullable
+    preview_video: string:500 nullable
+
+    # Pricing
+    price: decimal:10,2 default:0
+    currency: string:3 default:USD
+    discount_price: decimal:10,2 nullable
+
+    # Status & Publishing
+    status: enum:draft,pending,published,archived default:draft
+    is_published: boolean default:false
+    published_at: timestamp nullable
+
+    # Stats & Tracking
+    duration_minutes: integer default:0
+    lessons_count: integer default:0
+    students_count: integer default:0
+    reviews_count: integer default:0
+    average_rating: decimal:3,2 default:0
+
+    # Features
+    is_featured: boolean default:false
+    has_certificate: boolean default:false
+    allow_reviews: boolean default:true
+
+    # SEO
+    meta_title: string:255 nullable
+    meta_description: text nullable
+
+    indexes:
+      - index: instructor_id, status
+      - index: category_id, is_published
+
+    relationships:
+      belongsTo: User:instructor, Category
+      hasMany: Module, Lesson, Enrollment, Review, Announcement, Quiz, Assignment
+      belongsToMany: Tag
+
+  Module:
+    course_id: id:course foreign
+    title: string:255
+    description: text nullable
+    order: integer default:0
+    is_published: boolean default:false
+    relationships:
+      belongsTo: Course
+      hasMany: Lesson
+
+  Lesson:
+    course_id: id:course foreign
+    module_id: id:module nullable foreign
+    title: string:255 index
+    slug: string:255
+    content: longtext
+
+    # Video Content
+    video_url: string:500 nullable
+    video_provider: enum:youtube,vimeo,custom nullable
+    video_duration: integer nullable
+
+    # Content Type
+    type: enum:video,text,quiz,assignment default:video
+
+    # Settings
+    duration_minutes: integer default:0
+    order: integer default:0
+    is_free: boolean default:false
+    is_published: boolean default:false
+
+    indexes:
+      - index: course_id, order
+
+    relationships:
+      belongsTo: Course, Module
+      hasMany: LessonProgress, Resource, Comment
+
+  Resource:
+    lesson_id: id:lesson foreign
+    title: string:255
+    description: text nullable
+    file_name: string:255
+    file_path: string:500
+    file_type: string:50
+    file_size: integer
+    download_count: integer default:0
+    order: integer default:0
+    relationships:
+      belongsTo: Lesson
+
+  # ============================================
+  # ENROLLMENT & PROGRESS
+  # ============================================
+
+  Enrollment:
+    user_id: id:user foreign
+    course_id: id:course foreign
+
+    # Enrollment Details
+    enrolled_at: timestamp
+    started_at: timestamp nullable
+    completed_at: timestamp nullable
+    expires_at: timestamp nullable
+
+    # Progress Tracking
+    progress_percentage: integer default:0
+    last_accessed_at: timestamp nullable
+
+    # Payment
+    payment_id: id:payment nullable foreign
+    price_paid: decimal:10,2 default:0
+
+    # Status
+    status: enum:active,completed,expired,cancelled default:active
+
+    indexes:
+      - unique: user_id, course_id
+      - index: course_id, status
+
+    relationships:
+      belongsTo: User, Course, Payment
+      hasMany: LessonProgress
+
+  LessonProgress:
+    user_id: id:user foreign
+    lesson_id: id:lesson foreign
+    enrollment_id: id:enrollment foreign
+
+    is_completed: boolean default:false
+    completed_at: timestamp nullable
+    time_spent_seconds: integer default:0
+    last_position_seconds: integer default:0
+
+    indexes:
+      - unique: user_id, lesson_id
+
+    relationships:
+      belongsTo: User, Lesson, Enrollment
+
+  # ============================================
+  # ASSESSMENTS - QUIZZES
+  # ============================================
+
+  Quiz:
+    course_id: id:course foreign
+    lesson_id: id:lesson nullable foreign
+    title: string:255
+    description: text nullable
+
+    # Settings
+    duration_minutes: integer nullable
+    passing_score: integer default:70
+    max_attempts: integer default:3
+    shuffle_questions: boolean default:true
+    show_correct_answers: boolean default:true
+
+    # Status
+    is_published: boolean default:false
+    order: integer default:0
+
+    relationships:
+      belongsTo: Course, Lesson
+      hasMany: Question, QuizAttempt
+
+  Question:
+    quiz_id: id:quiz foreign
+    question_text: text
+    question_type: enum:multiple_choice,true_false,short_answer,essay
+
+    # Answer Options (JSON for multiple choice)
+    options: json nullable
+    correct_answer: text
+    explanation: text nullable
+
+    # Settings
+    points: integer default:1
+    order: integer default:0
+
+    relationships:
+      belongsTo: Quiz
+
+  QuizAttempt:
+    user_id: id:user foreign
+    quiz_id: id:quiz foreign
+
+    # Attempt Details
+    started_at: timestamp
+    completed_at: timestamp nullable
+    submitted_at: timestamp nullable
+
+    # Scoring
+    score: decimal:5,2 default:0
+    total_points: integer default:0
+    earned_points: integer default:0
+
+    # Answers (JSON)
+    answers: json nullable
+
+    # Status
+    status: enum:in_progress,completed,graded default:in_progress
+    is_passed: boolean default:false
+    attempt_number: integer default:1
+
+    indexes:
+      - index: user_id, quiz_id
+
+    relationships:
+      belongsTo: User, Quiz
+
+  # ============================================
+  # ASSESSMENTS - ASSIGNMENTS
+  # ============================================
+
+  Assignment:
+    course_id: id:course foreign
+    lesson_id: id:lesson nullable foreign
+    title: string:255
+    description: longtext
+    instructions: text nullable
+
+    # Files & Resources
+    attachments: json nullable
+
+    # Settings
+    max_score: integer default:100
+    max_file_size_mb: integer default:10
+    allowed_file_types: string:255 nullable
+
+    # Deadlines
+    due_date: timestamp nullable
+    late_submission_allowed: boolean default:true
+
+    # Status
+    is_published: boolean default:false
+    order: integer default:0
+
+    relationships:
+      belongsTo: Course, Lesson
+      hasMany: AssignmentSubmission
+
+  AssignmentSubmission:
+    assignment_id: id:assignment foreign
+    user_id: id:user foreign
+
+    # Submission Content
+    content: longtext nullable
+    file_path: string:500 nullable
+    file_name: string:255 nullable
+
+    # Grading
+    score: decimal:5,2 nullable
+    max_score: integer
+    feedback: text nullable
+    graded_by: id:user nullable foreign
+    graded_at: timestamp nullable
+
+    # Timestamps
+    submitted_at: timestamp
+    is_late: boolean default:false
+
+    # Status
+    status: enum:submitted,graded,returned,resubmitted default:submitted
+
+    indexes:
+      - index: assignment_id, user_id
+
+    relationships:
+      belongsTo: Assignment, User, User:grader
+
+  # ============================================
+  # REVIEWS & FEEDBACK
+  # ============================================
+
+  Review:
+    user_id: id:user foreign
+    course_id: id:course foreign
+
+    rating: integer
+    title: string:255 nullable
+    comment: text nullable
+
+    # Moderation
+    is_approved: boolean default:false
+    approved_at: timestamp nullable
+
+    # Helpfulness
+    helpful_count: integer default:0
+
+    indexes:
+      - unique: user_id, course_id
+      - index: course_id, is_approved
+
+    relationships:
+      belongsTo: User, Course
+
+  Comment:
+    user_id: id:user foreign
+    lesson_id: id:lesson foreign
+    parent_id: id:comment nullable foreign
+
+    content: text
+    is_approved: boolean default:false
+
+    indexes:
+      - index: lesson_id, is_approved
+
+    relationships:
+      belongsTo: User, Lesson, Comment:parent
+      hasMany: Comment:replies
+
+  # ============================================
+  # COMMUNICATION
+  # ============================================
+
+  Announcement:
+    course_id: id:course foreign
+    instructor_id: id:user foreign
+
+    title: string:255
+    content: text
+
+    is_published: boolean default:false
+    published_at: timestamp nullable
+
+    relationships:
+      belongsTo: Course, User:instructor
+
+  # ============================================
+  # E-COMMERCE
+  # ============================================
+
+  Payment:
+    user_id: id:user foreign
+    course_id: id:course foreign
+
+    # Payment Details
+    amount: decimal:10,2
+    currency: string:3 default:NGN
+    payment_method: enum:card,bank,ussd,mobile_money,qr default:card
+
+    # Paystack Transaction Details
+    paystack_reference: string:255 unique index
+    paystack_access_code: string:255 nullable
+    paystack_authorization_code: string:255 nullable
+    transaction_id: string:255 unique nullable index
+    reference_code: string:100 unique
+
+    # Payment Gateway Response
+    gateway_response: string:255 nullable
+    channel: string:50 nullable
+    ip_address: string:45 nullable
+
+    # Status
+    status: enum:pending,success,failed,abandoned,refunded default:pending
+
+    # Timestamps
+    paid_at: timestamp nullable
+
+    # Customer Info (for recurring)
+    customer_email: string:255
+    customer_code: string:100 nullable
+
+    # Additional Info
+    metadata: json nullable
+
+    indexes:
+      - index: user_id, status
+      - index: paystack_reference
+      - index: status, created_at
+
+    relationships:
+      belongsTo: User, Course
+      hasOne: Enrollment
+
+  Coupon:
+    code: string:50 unique index
+    description: text nullable
+
+    # Discount
+    discount_type: enum:percentage,fixed
+    discount_value: decimal:10,2
+    max_discount: decimal:10,2 nullable
+
+    # Applicability
+    course_id: id:course nullable foreign
+    category_id: id:category nullable foreign
+
+    # Limits
+    usage_limit: integer nullable
+    usage_count: integer default:0
+    per_user_limit: integer default:1
+
+    # Validity
+    valid_from: timestamp
+    valid_until: timestamp nullable
+
+    # Status
+    is_active: boolean default:true
+
+    relationships:
+      belongsTo: Course, Category
+
+  Wishlist:
+    user_id: id:user foreign
+    course_id: id:course foreign
+
+    indexes:
+      - unique: user_id, course_id
+
+    relationships:
+      belongsTo: User, Course
+
+  # ============================================
+  # CERTIFICATES
+  # ============================================
+
+  Certificate:
+    user_id: id:user foreign
+    course_id: id:course foreign
+    enrollment_id: id:enrollment foreign
+
+    certificate_number: string:100 unique index
+
+    # Details
+    issued_at: timestamp
+    valid_until: timestamp nullable
+
+    # File
+    file_path: string:500 nullable
+
+    indexes:
+      - unique: user_id, course_id
+
+    relationships:
+      belongsTo: User, Course, Enrollment
+
+# ============================================
+# CONTROLLERS
+# ============================================
+
+controllers:
+  # ------------------------------------------
+  # COURSE MANAGEMENT
+  # ------------------------------------------
+
+  Course:
+    index:
+      query: all
+      render: course.index with:courses
+
+    show:
+      find: course.id
+      render: course.show with:course
+
+    store:
+      validate: title, description, category_id, price, level
+      save: course
+      dispatch: ProcessCourseThumbnail with:course
+      flash: course.title
+      redirect: course.show
+
+    update:
+      find: course.id
+      validate: title, description, price
+      update: course
+      flash: course.title
+      redirect: course.show
+
+    destroy:
+      find: course.id
+      delete: course
+      redirect: course.index
+
+  Lesson:
+    index:
+      query: all
+      render: lesson.index with:lessons
+
+    show:
+      find: lesson.id
+      render: lesson.show with:lesson
+
+    store:
+      validate: title, content, course_id, module_id
+      save: lesson
+      dispatch: ProcessLessonVideo with:lesson
+      redirect: lesson.show
+
+    update:
+      find: lesson.id
+      validate: title, content
+      update: lesson
+      redirect: lesson.show
+
+  # ------------------------------------------
+  # ENROLLMENT
+  # ------------------------------------------
+
+  Enrollment:
+    store:
+      validate: user_id, course_id
+      save: enrollment
+      dispatch: SendEnrollmentConfirmation with:enrollment
+      fire: StudentEnrolled with:enrollment
+      redirect: course.show
+
+    show:
+      find: enrollment.id
+      render: enrollment.show with:enrollment
+
+  LessonProgress:
+    update:
+      find: lessonProgress.id
+      validate: is_completed, time_spent_seconds
+      update: lessonProgress
+      dispatch: UpdateCourseProgress with:lessonProgress
+      respond: lessonProgress, 200
+
+  # ------------------------------------------
+  # QUIZZES
+  # ------------------------------------------
+
+  Quiz:
+    show:
+      find: quiz.id
+      render: quiz.show with:quiz
+
+    store:
+      validate: title, course_id, passing_score
+      save: quiz
+      redirect: quiz.show
+
+  QuizAttempt:
+    store:
+      validate: quiz_id, user_id
+      save: quizAttempt
+      fire: QuizAttemptStarted with:quizAttempt
+      redirect: quizAttempt.show
+
+    update:
+      find: quizAttempt.id
+      validate: answers
+      update: quizAttempt
+      dispatch: GradeQuizAttempt with:quizAttempt
+      redirect: quizAttempt.show
+
+  # ------------------------------------------
+  # ASSIGNMENTS
+  # ------------------------------------------
+
+  Assignment:
+    show:
+      find: assignment.id
+      render: assignment.show with:assignment
+
+    store:
+      validate: title, description, course_id
+      save: assignment
+      redirect: assignment.show
+
+  AssignmentSubmission:
+    store:
+      validate: assignment_id, content
+      save: assignmentSubmission
+      send: AssignmentSubmittedNotification to:assignment.course.instructor with:assignmentSubmission
+      flash: assignmentSubmission.assignment.title
+      redirect: assignment.show
+
+    update:
+      find: assignmentSubmission.id
+      validate: score, feedback
+      update: assignmentSubmission
+      send: AssignmentGradedNotification to:assignmentSubmission.user with:assignmentSubmission
+      redirect: assignment.show
+
+  # ------------------------------------------
+  # REVIEWS & COMMENTS
+  # ------------------------------------------
+
+  Review:
+    store:
+      validate: rating, comment, course_id
+      save: review
+      dispatch: UpdateCourseRating with:review
+      redirect: course.show
+
+  Comment:
+    store:
+      validate: content, lesson_id
+      save: comment
+      fire: CommentPosted with:comment
+      redirect: lesson.show
+
+  # ------------------------------------------
+  # PAYMENTS (Paystack Integration)
+  # ------------------------------------------
+
+  Payment:
+    store:
+      validate: course_id, amount, customer_email
+      save: payment
+      dispatch: InitializePaystackPayment with:payment
+      respond: payment, 201
+
+    show:
+      find: payment.id
+      render: payment.show with:payment
+
+    verify:
+      find: payment.paystack_reference
+      dispatch: VerifyPaystackPayment with:payment
+      respond: payment, 200
+
+    webhook:
+      validate: paystack_reference
+      dispatch: HandlePaystackWebhook
+      respond: 200
+
+  # ------------------------------------------
+  # WISHLIST
+  # ------------------------------------------
+
+  Wishlist:
+    store:
+      validate: course_id
+      save: wishlist
+      flash: wishlist.course.title
+      redirect: course.show
+
+    destroy:
+      find: wishlist.id
+      delete: wishlist
+      redirect: wishlist.index
+
+  # ------------------------------------------
+  # ADMIN - CATEGORIES
+  # ------------------------------------------
+
+  Admin/Category:
+    index:
+      query: all
+      render: admin.category.index with:categories
+
+    store:
+      validate: name, slug
+      save: category
+      redirect: admin.category.index
+
+    update:
+      find: category.id
+      validate: name, slug
+      update: category
+      redirect: admin.category.index
+
+    destroy:
+      find: category.id
+      delete: category
+      redirect: admin.category.index
+
+# ============================================
+# SEEDERS
+# ============================================
+
+seeders: User, Category, Tag, Course, Module, Lesson, Quiz, Question, Assignment

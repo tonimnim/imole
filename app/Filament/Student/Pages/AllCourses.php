@@ -6,7 +6,9 @@ use Filament\Pages\Page;
 
 class AllCourses extends Page
 {
-    public static function getView(): string
+    protected static ?string $title = 'All Courses';
+
+    public function getView(): string
     {
         return 'filament.student.pages.all-courses';
     }

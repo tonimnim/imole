@@ -6,7 +6,9 @@ use Filament\Pages\Page;
 
 class MyCertificates extends Page
 {
-    public static function getView(): string
+    protected static ?string $title = 'My Certificates';
+
+    public function getView(): string
     {
         return 'filament.student.pages.my-certificates';
     }

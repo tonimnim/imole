@@ -8,7 +8,9 @@ class Home extends Page
 {
     protected static string $routePath = '/';
 
-    public static function getView(): string
+    protected static ?string $title = 'Home';
+
+    public function getView(): string
     {
         return 'filament.student.pages.home';
     }

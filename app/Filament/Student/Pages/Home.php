@@ -10,6 +10,11 @@ class Home extends Page
 
     protected static ?string $title = 'Home';
 
+    public function getHeading(): string
+    {
+        return '';
+    }
+
     public function getView(): string
     {
         return 'filament.student.pages.home';

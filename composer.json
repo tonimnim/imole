@@ -10,6 +10,7 @@
         "filament/filament": "^4.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "livewire/livewire": "^3.6",
         "spatie/laravel-permission": "^6.23",
         "yabacon/paystack-php": "^2.2"
     },

@@ -7,6 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/teaching', function () {
+    return view('teaching');
+})->name('teaching');
+
 // Main dashboard route - redirects to Filament panels based on role
 Route::get('/dashboard', function () {
     if (auth()->user()->hasRole('admin')) {

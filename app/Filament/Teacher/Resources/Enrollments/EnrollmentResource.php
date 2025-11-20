@@ -18,7 +18,13 @@ class EnrollmentResource extends Resource
 {
     protected static ?string $model = Enrollment::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
+
+    protected static ?int $navigationSort = 20;
+
+    protected static ?string $navigationLabel = 'Students';
+
+    protected static ?string $pluralModelLabel = 'Students';
 
     public static function form(Schema $schema): Schema
     {
@@ -28,6 +34,11 @@ class EnrollmentResource extends Resource
     public static function table(Table $table): Table
     {
         return EnrollmentsTable::configure($table);
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Performance';
     }
 
     public static function getRelations(): array

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan make:filament-resource:*)"
+      "Bash(php artisan make:filament-resource:*)",
+      "Bash(find:*)",
+      "mcp__laravel-boost__database-query"
     ],
     "deny": [],
     "ask": []

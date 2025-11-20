@@ -46,13 +46,13 @@
                     >
                         <div class="py-2">
                             <a href="#agriculture" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-gray-700">
-                                <span class="mr-2">🌾</span> Agriculture
+                                Agriculture
                             </a>
                             <a href="#horticulture" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-gray-700">
-                                <span class="mr-2">🌸</span> Horticulture
+                                Horticulture
                             </a>
                             <a href="#vocational" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-gray-700">
-                                <span class="mr-2">🔨</span> Vocational Skills
+                                Vocational Skills
                             </a>
                             <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
                             <a href="#all-courses" class="flex items-center px-4 py-2 text-sm text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 font-medium">
@@ -78,7 +78,7 @@
                 </a>
 
                 <!-- Partners -->
-                <a href="#partners" class="text-gray-900 dark:text-white hover:text-green-600 font-medium">
+                <a href="{{ route('teaching') }}" class="text-gray-900 dark:text-white hover:text-green-600 font-medium">
                     Partners
                 </a>
             </div>
@@ -143,13 +143,13 @@
                 </button>
                 <div x-show="coursesDropdownOpen" class="ml-4 mt-2 space-y-2" style="display: none;">
                     <a href="#agriculture" class="block text-gray-600 dark:text-gray-400 hover:text-green-600 py-1">
-                        🌾 Agriculture
+                        Agriculture
                     </a>
                     <a href="#horticulture" class="block text-gray-600 dark:text-gray-400 hover:text-green-600 py-1">
-                        🌸 Horticulture
+                        Horticulture
                     </a>
                     <a href="#vocational" class="block text-gray-600 dark:text-gray-400 hover:text-green-600 py-1">
-                        🔨 Vocational Skills
+                        Vocational Skills
                     </a>
                     <a href="#all-courses" class="block text-green-600 dark:text-green-400 font-medium py-1">
                         View All Courses →
@@ -166,7 +166,7 @@
             <a href="#contact" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
                 Contact
             </a>
-            <a href="#partners" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
+            <a href="{{ route('teaching') }}" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
                 Partners
             </a>
 

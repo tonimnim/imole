@@ -17,9 +17,10 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.register');
+        $role = $request->query('role', 'student');
+        return view('auth.register', ['role' => $role]);
     }
 
     /**
@@ -33,6 +34,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['nullable', 'string', 'in:student,teacher'],
         ]);
 
         $user = User::create([
@@ -41,13 +43,19 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Assign default 'student' role to new users
-        $user->assignRole('student');
+        // Assign role based on request parameter (default: student)
+        $role = $request->input('role', 'student');
+        $user->assignRole($role);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect based on role
+        if ($role === 'teacher') {
+            return redirect('/teacher');
+        }
+
+        return redirect('/my');
     }
 }

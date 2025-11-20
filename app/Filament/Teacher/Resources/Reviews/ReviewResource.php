@@ -18,7 +18,9 @@ class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
+
+    protected static ?int $navigationSort = 22;
 
     public static function form(Schema $schema): Schema
     {
@@ -28,6 +30,11 @@ class ReviewResource extends Resource
     public static function table(Table $table): Table
     {
         return ReviewsTable::configure($table);
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Performance';
     }
 
     public static function getRelations(): array

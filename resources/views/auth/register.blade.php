@@ -2,6 +2,9 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        <!-- Hidden Role Field -->
+        <input type="hidden" name="role" value="{{ $role ?? 'student' }}">
+
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />

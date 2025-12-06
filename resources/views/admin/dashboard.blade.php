@@ -21,7 +21,7 @@
                             <h4 class="font-semibold text-lg">Manage Courses</h4>
                             <p class="text-sm text-gray-600">Oversee all courses on the platform</p>
                         </div>
-                        <div class="bg-purple-100 p-4 rounded-lg">
+                        <div class="bg-yellow-100 p-4 rounded-lg">
                             <h4 class="font-semibold text-lg">System Settings</h4>
                             <p class="text-sm text-gray-600">Configure platform settings</p>
                         </div>

@@ -70,6 +70,14 @@ class Course extends Model
         ];
     }
 
+    /**
+     * Get the route key name for Laravel route model binding.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function instructor(): BelongsTo
     {
         return $this->belongsTo(User::class);

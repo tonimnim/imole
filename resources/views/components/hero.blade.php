@@ -1,143 +1,120 @@
-<!-- Hero Section - Rotating Carousel -->
-<section class="relative bg-gradient-to-br from-green-50 to-emerald-100 dark:from-gray-800 dark:to-gray-900">
-    <div
-        x-data="{
-            currentSlide: 0,
-            slides: [
-                {
-                    title: 'Africa\'s Premier Learning Platform',
-                    subtitle: 'Empowering education through technology, accessible to all.',
-                    image: '/african-woman-working-home-wearing-operator-headset-celebrating-achievement-with-happy-smile-winner-expression-with-raised-hand.jpg',
-                    cta1: 'Browse Courses',
-                    cta2: 'Watch Demo'
-                },
-                {
-                    title: 'Learn Skills That Transform Lives',
-                    subtitle: 'From agriculture to technology, gain practical skills for real-world success.',
-                    image: '/homepage-banner.svg',
-                    cta1: 'Get Started',
-                    cta2: 'Explore Topics'
-                }
-            ],
-            autoRotate: null,
-            startAutoRotate() {
-                this.autoRotate = setInterval(() => {
-                    this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-                }, 6000);
-            },
-            stopAutoRotate() {
-                if (this.autoRotate) {
-                    clearInterval(this.autoRotate);
-                }
-            },
-            goToSlide(index) {
-                this.currentSlide = index;
-                this.stopAutoRotate();
-                this.startAutoRotate();
-            }
-        }"
-        x-init="startAutoRotate()"
-        class="relative overflow-hidden"
-    >
-        <!-- Slides Container -->
-        <div class="relative min-h-[600px] lg:min-h-[700px]">
-            <template x-for="(slide, index) in slides" :key="index">
-                <div
-                    x-show="currentSlide === index"
-                    x-transition:enter="transition ease-out duration-700"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-700"
-                    x-transition:leave-start="opacity-100"
-                    x-transition:leave-end="opacity-0"
-                    class="absolute inset-0"
-                    style="display: none;"
-                >
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-                        <div class="grid lg:grid-cols-2 gap-12 items-center h-full py-20 lg:py-32">
+<!-- Premium Hero Section -->
+<section class="relative pt-24 pb-12 bg-gradient-to-br from-green-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden">
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 right-0 w-1/2 h-full opacity-10">
+        <svg viewBox="0 0 200 200" class="w-full h-full">
+            <circle cx="100" cy="100" r="80" fill="#EAB308"/>
+        </svg>
+    </div>
 
-                            <!-- Text Content -->
-                            <div class="text-center lg:text-left space-y-8">
-                                <div class="space-y-4">
-                                    <h1
-                                        class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight"
-                                        x-text="slide.title"
-                                    ></h1>
-                                    <p
-                                        class="text-xl sm:text-2xl text-gray-600 dark:text-gray-300"
-                                        x-text="slide.subtitle"
-                                    ></p>
-                                </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
 
-                                <!-- Quick Stats -->
-                                <div class="flex flex-wrap justify-center lg:justify-start gap-6 lg:gap-8 text-center lg:text-left">
-                                    <div>
-                                        <div class="text-3xl font-bold text-green-600">5,000+</div>
-                                        <div class="text-sm text-gray-600 dark:text-gray-400">Students</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-3xl font-bold text-green-600">50+</div>
-                                        <div class="text-sm text-gray-600 dark:text-gray-400">Courses</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-3xl font-bold text-green-600">20+</div>
-                                        <div class="text-sm text-gray-600 dark:text-gray-400">Topics</div>
-                                    </div>
-                                    <div>
-                                        <div class="text-3xl font-bold text-green-600">15</div>
-                                        <div class="text-sm text-gray-600 dark:text-gray-400">Countries</div>
-                                    </div>
-                                </div>
+            <!-- Left Content -->
+            <div class="space-y-8">
+                <!-- Badge -->
+                <div class="inline-flex items-center space-x-2 px-4 py-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-full border border-yellow-300 dark:border-yellow-700">
+                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-yellow-900 dark:text-yellow-200">#1 Education Platform in Africa</span>
+                </div>
 
-                                <!-- CTA Buttons -->
-                                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                    <a
-                                        href="#all-courses"
-                                        class="px-8 py-4 bg-green-600 text-white text-lg font-semibold rounded-lg hover:bg-green-700 shadow-xl hover:shadow-2xl inline-flex items-center justify-center"
-                                        x-text="slide.cta1"
-                                    ></a>
-                                    <a
-                                        href="#demo"
-                                        class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-lg font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-green-600 inline-flex items-center justify-center gap-2"
-                                    >
-                                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"/>
-                                        </svg>
-                                        <span x-text="slide.cta2"></span>
-                                    </a>
-                                </div>
+                <!-- Headline -->
+                <h1 class="text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                    <span class="text-gray-900 dark:text-white">Empower Your</span>
+                    <span class="block text-green-600">Future with Quality</span>
+                    <span class="block text-yellow-600">Education</span>
+                </h1>
+
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-xl">
+                    Join thousands of learners across Africa accessing world-class courses in agriculture, technology, and vocational skills. Learn at your own pace, earn certificates, and transform your career.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 bg-green-600 text-white text-lg font-semibold rounded-lg hover:bg-green-700 shadow-lg hover:shadow-xl transition-all">
+                        Start Learning Free
+                        <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </a>
+                    <a href="#all-courses" class="inline-flex items-center justify-center px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-lg font-semibold rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-green-600 dark:hover:border-green-600 transition-all">
+                        Explore Courses
+                    </a>
+                </div>
+
+                <!-- Trust Indicators -->
+                <div class="flex items-center space-x-8 pt-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex -space-x-2">
+                            <div class="w-10 h-10 rounded-full bg-green-200 border-2 border-white flex items-center justify-center text-sm font-bold text-green-700">5K</div>
+                            <div class="w-10 h-10 rounded-full bg-yellow-200 border-2 border-white flex items-center justify-center text-sm font-bold text-yellow-700">+</div>
+                        </div>
+                        <div class="text-sm">
+                            <div class="font-semibold text-gray-900 dark:text-white">5,000+ Students</div>
+                            <div class="text-gray-600 dark:text-gray-400">Learning Today</div>
+                        </div>
+                    </div>
+                    <div class="text-sm">
+                        <div class="flex items-center space-x-1">
+                            <span class="text-2xl font-bold text-gray-900 dark:text-white">4.8</span>
+                            <div class="flex text-yellow-400">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                             </div>
+                        </div>
+                        <div class="text-gray-600 dark:text-gray-400">Average Rating</div>
+                    </div>
+                </div>
+            </div>
 
-                            <!-- Image -->
-                            <img
-                                :src="slide.image"
-                                :alt="slide.title"
-                                class="w-full h-auto"
-                            />
+            <!-- Right Visual -->
+            <div class="relative">
+                <div class="relative z-10">
+                    <!-- Main Image Container -->
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
+                        <img src="{{ asset('images/logo.png') }}" alt="Imole Africa" class="w-full h-auto">
+                    </div>
 
+                    <!-- Floating Card 1 -->
+                    <div class="absolute -left-4 top-20 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 max-w-xs">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-gray-900 dark:text-white">1,200+</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Courses Available</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Card 2 -->
+                    <div class="absolute -right-4 bottom-20 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0 w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-gray-900 dark:text-white">15</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Countries</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </template>
-        </div>
+            </div>
 
-        <!-- Navigation Dots -->
-        <div class="absolute bottom-8 left-0 right-0 flex justify-center gap-3 z-10">
-            <template x-for="(slide, index) in slides" :key="index">
-                <button
-                    @click="goToSlide(index)"
-                    :class="currentSlide === index ? 'bg-green-600 w-12' : 'bg-white/50 w-3'"
-                    class="h-3 rounded-full transition-all duration-300 hover:bg-green-500"
-                ></button>
-            </template>
         </div>
+    </div>
 
-        <!-- Decorative Wave -->
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg class="w-full h-16 fill-white dark:fill-gray-900" viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0,32L60,29.3C120,27,240,21,360,21.3C480,21,600,27,720,32C840,37,960,43,1080,42.7C1200,43,1320,37,1380,34.7L1440,32L1440,48L1380,48C1320,48,1200,48,1080,48C960,48,840,48,720,48C600,48,480,48,360,48C240,48,120,48,60,48L0,48Z"></path>
-            </svg>
-        </div>
-
+    <!-- Wave Divider -->
+    <div class="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" class="w-full h-20 fill-white dark:fill-gray-900">
+            <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
+        </svg>
     </div>
 </section>

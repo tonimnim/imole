@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\Categories\Pages\ListCategories;
 use App\Filament\Admin\Resources\Categories\Schemas\CategoryForm;
 use App\Filament\Admin\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Category;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $recordTitleAttribute = 'name';
 

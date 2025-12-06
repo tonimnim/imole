@@ -21,7 +21,7 @@
                             <h4 class="font-semibold text-lg">Assignments</h4>
                             <p class="text-sm text-gray-600">Complete your assignments</p>
                         </div>
-                        <div class="bg-purple-100 p-4 rounded-lg">
+                        <div class="bg-yellow-100 p-4 rounded-lg">
                             <h4 class="font-semibold text-lg">Grades</h4>
                             <p class="text-sm text-gray-600">Check your progress and grades</p>
                         </div>

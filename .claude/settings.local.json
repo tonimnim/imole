@@ -2,10 +2,34 @@
   "permissions": {
     "allow": [
       "Bash(php artisan make:filament-resource:*)",
+<<<<<<< HEAD
       "Bash(find:*)",
       "mcp__laravel-boost__database-query"
+=======
+      "Bash(php artisan serve:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs:*)",
+      "Bash(php artisan:*)",
+      "Bash(php artisan config:clear:*)",
+      "Bash(composer require:*)",
+      "mcp__laravel-boost__application-info",
+      "mcp__laravel-boost__database-schema",
+      "Bash(npm run build)",
+      "Bash(curl:*)",
+      "Bash(vendor/bin/pint:*)",
+      "Bash(find:*)",
+      "mcp__laravel-boost__database-query",
+      "mcp__laravel-boost__browser-logs",
+      "mcp__laravel-boost__last-error",
+      "mcp__laravel-boost__list-routes",
+      "Bash(grep:*)"
+>>>>>>> ce9ee18 (student+teacher)
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ]
 }

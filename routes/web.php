@@ -1,11 +1,35 @@
 <?php
 
+use App\Http\Controllers\Auth\TeacherRegistrationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $featuredCourses = \App\Models\Course::query()
+        ->where('is_published', true)
+        ->where('is_featured', true)
+        ->with(['category', 'instructor'])
+        ->withCount(['enrollments', 'reviews'])
+        ->withAvg('reviews', 'rating')
+        ->orderBy('enrollments_count', 'desc')
+        ->take(8)
+        ->get()
+        ->map(function ($course) {
+            $course->students_count = $course->enrollments_count;
+            $course->average_rating = $course->reviews_avg_rating ?? 0;
+
+            return $course;
+        });
+
+    $categories = \App\Models\Category::query()
+        ->where('is_active', true)
+        ->whereNull('parent_id')
+        ->orderBy('order')
+        ->take(6)
+        ->get();
+
+    return view('welcome', compact('featuredCourses', 'categories'));
+})->name('home');
 
 Route::get('/teaching', function () {
     return view('teaching');
@@ -20,16 +44,22 @@ Route::get('/dashboard', function () {
     } else {
         return redirect('/my');
     }
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('teacher/register', [TeacherRegistrationController::class, 'create'])->name('teacher.register');
+    // {{ ... }}
+    Route::post('teacher/register', [TeacherRegistrationController::class, 'store'])->name('teacher.register.store');
 });
 
 require __DIR__.'/auth.php';
-
 
 Route::resource('courses', App\Http\Controllers\CourseController::class)->except('create', 'edit');
 

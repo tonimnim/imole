@@ -5,11 +5,9 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\CategoryResource\Pages;
 use App\Models\Category;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class CategoryResource extends Resource
 {

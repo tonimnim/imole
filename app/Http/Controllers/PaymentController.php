@@ -14,31 +14,29 @@ use Illuminate\View\View;
 
 class PaymentController extends Controller
 {
-    public function store(PaymentStoreRequest $request): Response
+    public function store(PaymentStoreRequest $request)
     {
         $payment = Payment::create($request->validated());
 
         InitializePaystackPayment::dispatch($payment);
 
-        return $payment, 201;
+        return response()->json($payment, 201);
     }
 
-    public function show(Request $request, Payment $payment): Response
+    public function show(Request $request, Payment $payment): View
     {
-        $payment = Payment::find($id);
-
         return view('payment.show', [
             'payment' => $payment,
         ]);
     }
 
-    public function verify(Request $request): Response
+    public function verify(Request $request, string $paystack_reference)
     {
-        $payment = Payment::find($paystack_reference);
+        $payment = Payment::where('paystack_reference', $paystack_reference)->firstOrFail();
 
         VerifyPaystackPayment::dispatch($payment);
 
-        return $payment, 200;
+        return response()->json($payment, 200);
     }
 
     public function webhook(PaymentWebhookRequest $request): Response

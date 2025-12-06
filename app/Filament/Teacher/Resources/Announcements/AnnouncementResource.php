@@ -8,21 +8,25 @@ use App\Filament\Teacher\Resources\Announcements\Pages\ListAnnouncements;
 use App\Filament\Teacher\Resources\Announcements\Schemas\AnnouncementForm;
 use App\Filament\Teacher\Resources\Announcements\Tables\AnnouncementsTable;
 use App\Models\Announcement;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
+<<<<<<< HEAD
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
 
     protected static ?int $navigationSort = 21;
+=======
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
+>>>>>>> ce9ee18 (student+teacher)
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Communication';
 
     public static function form(Schema $schema): Schema
     {

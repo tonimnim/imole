@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\Coupons\Pages\ListCoupons;
 use App\Filament\Admin\Resources\Coupons\Schemas\CouponForm;
 use App\Filament\Admin\Resources\Coupons\Tables\CouponsTable;
 use App\Models\Coupon;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CouponResource extends Resource
 {
     protected static ?string $model = Coupon::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $recordTitleAttribute = 'code';
 

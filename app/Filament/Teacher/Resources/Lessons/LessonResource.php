@@ -8,23 +8,23 @@ use App\Filament\Teacher\Resources\Lessons\Pages\ListLessons;
 use App\Filament\Teacher\Resources\Lessons\Schemas\LessonForm;
 use App\Filament\Teacher\Resources\Lessons\Tables\LessonsTable;
 use App\Models\Lesson;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class LessonResource extends Resource
 {
     protected static ?string $model = Lesson::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 3;
 
     protected static bool $shouldRegisterNavigation = false;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static \UnitEnum|string|null $navigationGroup = 'Course Management';
 
     public static function form(Schema $schema): Schema
     {

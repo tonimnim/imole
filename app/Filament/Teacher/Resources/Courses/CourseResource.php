@@ -8,17 +8,15 @@ use App\Filament\Teacher\Resources\Courses\Pages\ListCourses;
 use App\Filament\Teacher\Resources\Courses\Schemas\CourseForm;
 use App\Filament\Teacher\Resources\Courses\Tables\CoursesTable;
 use App\Models\Course;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CourseResource extends Resource
 {
     protected static ?string $model = Course::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = -1;
 
@@ -26,9 +24,11 @@ class CourseResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static \UnitEnum|string|null $navigationGroup = 'Course Management';
+
     public static function form(Schema $schema): Schema
     {
-        return CourseForm::configure($schema);
+        return $schema->components(CourseForm::getSchema());
     }
 
     public static function table(Table $table): Table

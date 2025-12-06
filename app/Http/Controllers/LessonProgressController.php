@@ -5,19 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LessonProgressUpdateRequest;
 use App\Jobs\UpdateCourseProgress;
 use App\Models\LessonProgress;
-use Illuminate\Http\Request;
 
 class LessonProgressController extends Controller
 {
-    public function update(LessonProgressUpdateRequest $request, LessonProgress $lessonProgress): Response
+    public function update(LessonProgressUpdateRequest $request, LessonProgress $lessonProgress)
     {
-        $lessonProgress = LessonProgress::find($id);
-
-
         $lessonProgress->update($request->validated());
 
         UpdateCourseProgress::dispatch($lessonProgress);
 
-        return $lessonProgress, 200;
+        return response()->json($lessonProgress, 200);
     }
 }

@@ -2,10 +2,26 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Teacher\Resources\Announcements\AnnouncementResource;
+use App\Filament\Teacher\Resources\Assignments\AssignmentResource;
+use App\Filament\Teacher\Resources\AssignmentSubmissions\AssignmentSubmissionResource;
+use App\Filament\Teacher\Resources\Certificates\CertificateResource;
+use App\Filament\Teacher\Resources\Courses\CourseResource;
+use App\Filament\Teacher\Resources\Enrollments\EnrollmentResource;
+use App\Filament\Teacher\Resources\Lessons\LessonResource;
+use App\Filament\Teacher\Resources\Modules\ModuleResource;
+use App\Filament\Teacher\Resources\Questions\QuestionResource;
+use App\Filament\Teacher\Resources\Quizzes\QuizResource;
+use App\Filament\Teacher\Resources\Reviews\ReviewResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+<<<<<<< HEAD
+=======
+use Filament\Navigation\NavigationGroup;
+use Filament\Pages\Dashboard;
+>>>>>>> ce9ee18 (student+teacher)
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -28,9 +44,33 @@ class TeacherPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Green,
             ])
-            ->discoverResources(in: app_path('Filament/Teacher/Resources'), for: 'App\Filament\Teacher\Resources')
+            ->navigationGroups([
+                NavigationGroup::make('Course Management'),
+                NavigationGroup::make('Student Engagement'),
+                NavigationGroup::make('Communication'),
+                NavigationGroup::make('Rewards'),
+            ])
+            ->resources([
+                CourseResource::class,
+                ModuleResource::class,
+                LessonResource::class,
+                EnrollmentResource::class,
+                AssignmentResource::class,
+                AssignmentSubmissionResource::class,
+                QuizResource::class,
+                QuestionResource::class,
+                AnnouncementResource::class,
+                ReviewResource::class,
+                CertificateResource::class,
+            ])
             ->discoverPages(in: app_path('Filament/Teacher/Pages'), for: 'App\Filament\Teacher\Pages')
             ->discoverWidgets(in: app_path('Filament/Teacher/Widgets'), for: 'App\Filament\Teacher\Widgets')
+<<<<<<< HEAD
+=======
+            ->widgets([
+                // Custom widgets only - AccountWidget and FilamentInfoWidget removed
+            ])
+>>>>>>> ce9ee18 (student+teacher)
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

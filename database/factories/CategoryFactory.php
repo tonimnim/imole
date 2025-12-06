@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Category;
-use App\Models\Parent;
 
 class CategoryFactory extends Factory
 {
@@ -21,14 +20,16 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->words(2, true);
+
         return [
-            'name' => fake()->name(),
-            'slug' => fake()->slug(),
-            'description' => fake()->text(),
-            'icon' => fake()->regexify('[A-Za-z0-9]{100}'),
-            'parent_id' => Parent::factory(),
-            'order' => fake()->numberBetween(-10000, 10000),
-            'is_active' => fake()->boolean(),
+            'name' => ucwords($name),
+            'slug' => Str::slug($name),
+            'description' => fake()->sentence(10),
+            'icon' => null,
+            'parent_id' => null,
+            'order' => fake()->numberBetween(1, 100),
+            'is_active' => true,
         ];
     }
 }

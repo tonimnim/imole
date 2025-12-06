@@ -2,57 +2,18 @@
 
 namespace App\Filament\Teacher\Resources\Courses\Schemas;
 
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-<<<<<<< HEAD
-use Filament\Schemas\Schema;
-=======
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Wizard;
 use Illuminate\Support\Str;
->>>>>>> ce9ee18 (student+teacher)
 
 class CourseForm
 {
     public static function getSchema(): array
     {
-<<<<<<< HEAD
-        return $schema
-            ->components([
-                TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-
-                Select::make('category_id')
-                    ->label('Category')
-                    ->relationship('category', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
-
-                Textarea::make('description')
-                    ->required()
-                    ->rows(5)
-                    ->columnSpanFull(),
-
-                Select::make('level')
-                    ->required()
-                    ->options([
-                        'beginner' => 'Beginner',
-                        'intermediate' => 'Intermediate',
-                        'advanced' => 'Advanced',
-                    ])
-                    ->default('beginner'),
-
-                TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->default(0)
-                    ->prefix('$')
-                    ->minValue(0),
-            ]);
-=======
         return [
             Wizard::make([
                 Wizard\Step::make('Course Details')
@@ -108,6 +69,5 @@ class CourseForm
                     ]),
             ])->columnSpanFull(),
         ];
->>>>>>> ce9ee18 (student+teacher)
     }
 }

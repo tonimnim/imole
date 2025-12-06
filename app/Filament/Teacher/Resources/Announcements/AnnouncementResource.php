@@ -16,17 +16,9 @@ class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
-<<<<<<< HEAD
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
-
     protected static ?int $navigationSort = 21;
-=======
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
->>>>>>> ce9ee18 (student+teacher)
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    protected static \UnitEnum|string|null $navigationGroup = 'Communication';
 
     public static function form(Schema $schema): Schema
     {

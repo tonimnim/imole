@@ -92,6 +92,28 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
                         </svg>
                     </button>
 
+<<<<<<< HEAD
+                    <!-- Courses Dropdown Menu -->
+                    <div
+                        x-show="coursesDropdownOpen"
+                        class="absolute left-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5"
+                        style="display: none;"
+                    >
+                        <div class="py-2">
+                            <a href="#agriculture" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-gray-700">
+                                Agriculture
+                            </a>
+                            <a href="#horticulture" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-gray-700">
+                                Horticulture
+                            </a>
+                            <a href="#vocational" class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-gray-700">
+                                Vocational Skills
+                            </a>
+                            <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                            <a href="#all-courses" class="flex items-center px-4 py-2 text-sm text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 font-medium">
+                                View All Courses →
+                            </a>
+=======
                     <!-- Mega Menu Dropdown -->
                     <div x-show="open"
                          x-transition:enter="transition ease-out duration-200"
@@ -203,6 +225,7 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
                                     </a>
                                 </div>
                             </div>
+>>>>>>> ce9ee18 (student+teacher)
                         </div>
                     </div>
                 </div>
@@ -219,9 +242,16 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
                     <span>Impact</span>
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-yellow-600 group-hover:w-3/4 transition-all duration-300"></span>
                 </a>
+<<<<<<< HEAD
+
+                <!-- Partners -->
+                <a href="{{ route('teaching') }}" class="text-gray-900 dark:text-white hover:text-green-600 font-medium">
+                    Partners
+=======
                 <a href="/#contact" class="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition-all relative group">
                     <span>Contact</span>
                     <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-yellow-600 group-hover:w-3/4 transition-all duration-300"></span>
+>>>>>>> ce9ee18 (student+teacher)
                 </a>
             </nav>
 
@@ -344,6 +374,23 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
+<<<<<<< HEAD
+                <div x-show="coursesDropdownOpen" class="ml-4 mt-2 space-y-2" style="display: none;">
+                    <a href="#agriculture" class="block text-gray-600 dark:text-gray-400 hover:text-green-600 py-1">
+                        Agriculture
+                    </a>
+                    <a href="#horticulture" class="block text-gray-600 dark:text-gray-400 hover:text-green-600 py-1">
+                        Horticulture
+                    </a>
+                    <a href="#vocational" class="block text-gray-600 dark:text-gray-400 hover:text-green-600 py-1">
+                        Vocational Skills
+                    </a>
+                    <a href="#all-courses" class="block text-green-600 dark:text-green-400 font-medium py-1">
+                        View All Courses →
+                    </a>
+                </div>
+=======
+>>>>>>> ce9ee18 (student+teacher)
             </div>
             <p class="text-center text-sm text-gray-500 dark:text-gray-400 mt-3">
                 Press <kbd class="px-2 py-1 text-xs font-semibold text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded">ESC</kbd> to close
@@ -351,6 +398,20 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
         </div>
     </div>
 
+<<<<<<< HEAD
+            <a href="#about" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
+                About Us
+            </a>
+            <a href="#how-it-works" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
+                How It Works
+            </a>
+            <a href="#contact" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
+                Contact
+            </a>
+            <a href="{{ route('teaching') }}" class="block text-gray-900 dark:text-white hover:text-green-600 font-medium py-2">
+                Partners
+            </a>
+=======
     <!-- Mobile Menu -->
     <div x-show="mobileMenuOpen"
          x-transition:enter="transition ease-out duration-200"
@@ -403,6 +464,7 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
                     Contact
                 </a>
             </nav>
+>>>>>>> ce9ee18 (student+teacher)
 
             <!-- Mobile Auth Actions -->
             @if (Route::has('login'))

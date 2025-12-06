@@ -16,19 +16,11 @@ class EnrollmentResource extends Resource
 {
     protected static ?string $model = Enrollment::class;
 
-<<<<<<< HEAD
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
-
     protected static ?int $navigationSort = 20;
 
     protected static ?string $navigationLabel = 'Students';
 
     protected static ?string $pluralModelLabel = 'Students';
-=======
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static \UnitEnum|string|null $navigationGroup = 'Student Engagement';
->>>>>>> ce9ee18 (student+teacher)
 
     public static function form(Schema $schema): Schema
     {

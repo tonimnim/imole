@@ -16,13 +16,11 @@ class AssignmentResource extends Resource
 {
     protected static ?string $model = Assignment::class;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
     protected static ?int $navigationSort = 10;
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    protected static \UnitEnum|string|null $navigationGroup = 'Student Engagement';
 
     public static function form(Schema $schema): Schema
     {

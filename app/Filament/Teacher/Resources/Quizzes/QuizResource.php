@@ -11,18 +11,28 @@ use App\Models\Quiz;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class QuizResource extends Resource
 {
     protected static ?string $model = Quiz::class;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    /**
+     * Only show quizzes for courses owned by the logged-in teacher.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('course', function ($query) {
+                $query->where('instructor_id', auth()->id());
+            });
+    }
+
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-question-mark-circle';
 
     protected static ?int $navigationSort = 13;
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    protected static \UnitEnum|string|null $navigationGroup = 'Student Engagement';
 
     public static function form(Schema $schema): Schema
     {

@@ -24,8 +24,6 @@ class ModuleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Course Management';
-
     public static function form(Schema $schema): Schema
     {
         return ModuleForm::configure($schema);

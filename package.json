@@ -20,6 +20,9 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "heroicons": "^2.2.0"
+        "@vitejs/plugin-vue": "^6.0.2",
+        "heroicons": "^2.2.0",
+        "vue": "^3.5.25",
+        "vuedraggable": "^4.1.0"
     }
 }

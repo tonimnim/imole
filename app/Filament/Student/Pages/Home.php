@@ -10,6 +10,8 @@ class Home extends Page
 
     protected static ?string $title = 'Home';
 
+    protected static bool $shouldRegisterNavigation = true;
+
     public function getHeading(): string
     {
         return '';
@@ -28,11 +30,6 @@ class Home extends Page
     public static function getNavigationSort(): ?int
     {
         return 1;
-    }
-
-    public function getTitle(): string
-    {
-        return 'Home';
     }
 
     public static function getNavigationLabel(): string

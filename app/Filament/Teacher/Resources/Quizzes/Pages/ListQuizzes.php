@@ -3,7 +3,7 @@
 namespace App\Filament\Teacher\Resources\Quizzes\Pages;
 
 use App\Filament\Teacher\Resources\Quizzes\QuizResource;
-use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 
 class ListQuizzes extends ListRecords
@@ -13,7 +13,11 @@ class ListQuizzes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Action::make('quiz-builder')
+                ->label('Quiz Builder')
+                ->icon('heroicon-o-plus')
+                ->url(route('teacher.quiz-builder'))
+                ->color('primary'),
         ];
     }
 }

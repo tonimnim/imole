@@ -2,9 +2,10 @@
 
 namespace App\Filament\Teacher\Resources\Quizzes\Tables;
 
+use App\Models\Quiz;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -15,35 +16,33 @@ class QuizzesTable
     {
         return $table
             ->columns([
+                TextColumn::make('title')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('course.title')
+                    ->label('Course')
                     ->searchable(),
                 TextColumn::make('lesson.title')
+                    ->label('Lesson')
                     ->searchable(),
-                TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('duration_minutes')
-                    ->numeric()
+                TextColumn::make('questions_count')
+                    ->label('Questions')
+                    ->counts('questions')
                     ->sortable(),
                 TextColumn::make('passing_score')
-                    ->numeric()
+                    ->label('Pass %')
+                    ->suffix('%')
                     ->sortable(),
-                TextColumn::make('max_attempts')
-                    ->numeric()
+                TextColumn::make('duration_minutes')
+                    ->label('Duration')
+                    ->suffix(' min')
+                    ->placeholder('No limit')
                     ->sortable(),
-                IconColumn::make('shuffle_questions')
-                    ->boolean(),
-                IconColumn::make('show_correct_answers')
-                    ->boolean(),
                 IconColumn::make('is_published')
+                    ->label('Published')
                     ->boolean(),
-                TextColumn::make('order')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                    ->label('Created')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -52,7 +51,11 @@ class QuizzesTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                Action::make('edit-questions')
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('primary')
+                    ->url(fn (Quiz $record): string => route('teacher.quiz-builder').'?quiz='.$record->id),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -11,20 +11,27 @@ use App\Models\Course;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class CourseResource extends Resource
 {
     protected static ?string $model = Course::class;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    /**
+     * Only show courses owned by the logged-in teacher.
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('instructor_id', auth()->id());
+    }
+
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-book-open';
 
     protected static ?int $navigationSort = -1;
 
     protected static ?string $navigationLabel = 'Courses';
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    protected static \UnitEnum|string|null $navigationGroup = 'Course Management';
 
     public static function form(Schema $schema): Schema
     {

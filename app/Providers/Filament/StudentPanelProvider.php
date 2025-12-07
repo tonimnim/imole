@@ -13,7 +13,9 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
+use Illuminate\Support\HtmlString;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -30,6 +32,7 @@ class StudentPanelProvider extends PanelProvider
             ->path('my')
             ->login()
             ->spa()
+            ->topNavigation()
             ->colors([
                 'primary' => Color::Green,
             ])
@@ -57,6 +60,10 @@ class StudentPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => new HtmlString('<style>.fi-sidebar { display: none !important; } .fi-main-ctn { margin-inline-start: 0 !important; }</style>')
+            );
     }
 }

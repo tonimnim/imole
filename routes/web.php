@@ -51,6 +51,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Teacher Curriculum Builder
+    Route::get('/teacher/courses/{course}/curriculum', [App\Http\Controllers\Teacher\CurriculumPageController::class, 'show'])
+        ->name('teacher.curriculum');
+
+    // Teacher Quiz Builder
+    Route::get('/teacher/quiz-builder', [App\Http\Controllers\Teacher\QuizBuilderPageController::class, 'index'])
+        ->name('teacher.quiz-builder');
 });
 
 Route::middleware('guest')->group(function () {

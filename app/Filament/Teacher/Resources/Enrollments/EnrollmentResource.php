@@ -16,6 +16,8 @@ class EnrollmentResource extends Resource
 {
     protected static ?string $model = Enrollment::class;
 
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-users';
+
     protected static ?int $navigationSort = 20;
 
     protected static ?string $navigationLabel = 'Students';
@@ -30,11 +32,6 @@ class EnrollmentResource extends Resource
     public static function table(Table $table): Table
     {
         return EnrollmentsTable::configure($table);
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Performance';
     }
 
     public static function getRelations(): array

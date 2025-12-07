@@ -2,10 +2,11 @@
 
 namespace App\Filament\Teacher\Resources\Courses\Tables;
 
+use App\Models\Course;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -49,6 +50,11 @@ class CoursesTable
                 //
             ])
             ->recordActions([
+                Action::make('curriculum')
+                    ->label('Curriculum')
+                    ->icon('heroicon-o-academic-cap')
+                    ->color('success')
+                    ->url(fn (Course $record): string => route('teacher.curriculum', $record)),
                 EditAction::make(),
             ])
             ->toolbarActions([

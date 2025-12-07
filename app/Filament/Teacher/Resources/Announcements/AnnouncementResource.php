@@ -16,6 +16,8 @@ class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
 
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-megaphone';
+
     protected static ?int $navigationSort = 21;
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -28,11 +30,6 @@ class AnnouncementResource extends Resource
     public static function table(Table $table): Table
     {
         return AnnouncementsTable::configure($table);
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Communication';
     }
 
     public static function getRelations(): array

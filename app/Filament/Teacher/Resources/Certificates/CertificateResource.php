@@ -16,13 +16,11 @@ class CertificateResource extends Resource
 {
     protected static ?string $model = Certificate::class;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-trophy';
 
     protected static ?int $navigationSort = 12;
 
     protected static ?string $recordTitleAttribute = 'title';
-
-    protected static \UnitEnum|string|null $navigationGroup = 'Rewards';
 
     public static function form(Schema $schema): Schema
     {

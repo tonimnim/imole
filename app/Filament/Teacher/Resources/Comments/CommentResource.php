@@ -36,11 +36,6 @@ class CommentResource extends Resource
         return CommentsTable::configure($table);
     }
 
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Communication';
-    }
-
     public static function getRelations(): array
     {
         return [

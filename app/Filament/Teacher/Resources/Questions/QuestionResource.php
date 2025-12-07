@@ -22,8 +22,6 @@ class QuestionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'question_text';
 
-    protected static \UnitEnum|string|null $navigationGroup = 'Student Engagement';
-
     public static function form(Schema $schema): Schema
     {
         return QuestionForm::configure($schema);

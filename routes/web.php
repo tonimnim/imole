@@ -35,14 +35,14 @@ Route::get('/teaching', function () {
     return view('teaching');
 })->name('teaching');
 
-// Main dashboard route - redirects to Filament panels based on role
+// Main dashboard route - redirects based on role
 Route::get('/dashboard', function () {
     if (auth()->user()->hasRole('admin')) {
         return redirect('/admin');
     } elseif (auth()->user()->hasRole('teacher')) {
         return redirect('/teacher');
     } else {
-        return redirect('/my');
+        return redirect()->route('student.dashboard');
     }
 })->middleware('auth')->name('dashboard');
 
@@ -50,6 +50,60 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Student Portal Routes
+    Route::prefix('student')->name('student.')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Student\StudentDashboardController::class, 'dashboard'])->name('dashboard');
+        Route::get('/my-courses', [App\Http\Controllers\Student\StudentDashboardController::class, 'myCourses'])->name('my-courses');
+        Route::get('/certificates', [App\Http\Controllers\Student\StudentDashboardController::class, 'certificates'])->name('certificates');
+        Route::get('/wishlist', [App\Http\Controllers\Student\WishlistController::class, 'index'])->name('wishlist');
+    });
+
+    // Course Learning Routes
+    Route::prefix('learn')->name('student.learn.')->group(function () {
+        Route::get('/{course:slug}/start', [App\Http\Controllers\Student\CourseLearningController::class, 'start'])->name('start');
+        Route::get('/{course:slug}/completed', [App\Http\Controllers\Student\CourseLearningController::class, 'completed'])->name('completed');
+        Route::get('/{course:slug}/{lesson:slug}', [App\Http\Controllers\Student\CourseLearningController::class, 'lesson'])->name('lesson');
+        Route::post('/{course:slug}/{lesson:slug}/complete', [App\Http\Controllers\Student\CourseLearningController::class, 'completeLesson'])->name('complete');
+        Route::post('/{course:slug}/{lesson:slug}/progress', [App\Http\Controllers\Student\CourseLearningController::class, 'updateProgress'])->name('progress');
+        Route::post('/{course:slug}/{lesson:slug}/notes', [App\Http\Controllers\Student\CourseLearningController::class, 'saveNote'])->name('notes.save');
+        Route::delete('/{course:slug}/{lesson:slug}/notes/{note}', [App\Http\Controllers\Student\CourseLearningController::class, 'deleteNote'])->name('notes.delete');
+    });
+
+    // Certificate Routes
+    Route::get('/certificate/{certificate}', function (\App\Models\Certificate $certificate) {
+        if ($certificate->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('student.certificate', compact('certificate'));
+    })->middleware('auth')->name('certificate.view');
+
+    Route::get('/certificate/{certificate}/download', function (\App\Models\Certificate $certificate) {
+        if ($certificate->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('student.certificate-pdf', compact('certificate'))
+            ->setPaper('a4', 'landscape')
+            ->setOption('isHtml5ParserEnabled', true)
+            ->setOption('isRemoteEnabled', true);
+
+        return $pdf->download('certificate-'.$certificate->certificate_number.'.pdf');
+    })->middleware('auth')->name('certificate.download');
+
+    // Cart Routes
+    Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/apply-coupon', [App\Http\Controllers\CartController::class, 'applyCoupon'])->name('cart.apply-coupon');
+    Route::delete('/cart/{cart}', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart', [App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
+
+    // Checkout Routes
+    Route::get('/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success/{order}', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/failed/{order}', [App\Http\Controllers\CheckoutController::class, 'failed'])->name('checkout.failed');
 
     // Teacher Curriculum Builder
     Route::get('/teacher/courses/{course}/curriculum', [App\Http\Controllers\Teacher\CurriculumPageController::class, 'show'])
@@ -85,6 +139,9 @@ Route::resource('assignments', App\Http\Controllers\AssignmentController::class)
 Route::resource('assignment-submissions', App\Http\Controllers\AssignmentSubmissionController::class)->only('store', 'update');
 
 Route::resource('reviews', App\Http\Controllers\ReviewController::class)->only('store');
+Route::post('reviews/{review}/helpful', [App\Http\Controllers\ReviewController::class, 'markHelpful'])
+    ->middleware('auth')
+    ->name('reviews.helpful');
 
 Route::resource('comments', App\Http\Controllers\CommentController::class)->only('store');
 
@@ -92,6 +149,6 @@ Route::get('payments/verify', [App\Http\Controllers\PaymentController::class, 'v
 Route::get('payments/webhook', [App\Http\Controllers\PaymentController::class, 'webhook']);
 Route::resource('payments', App\Http\Controllers\PaymentController::class)->only('store', 'show');
 
-Route::resource('wishlists', App\Http\Controllers\WishlistController::class)->only('store', 'destroy');
+Route::resource('wishlists', App\Http\Controllers\Student\WishlistController::class)->only('store', 'destroy');
 
 Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->except('create', 'edit', 'show');

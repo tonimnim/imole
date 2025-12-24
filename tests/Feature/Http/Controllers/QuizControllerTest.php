@@ -29,7 +29,6 @@ final class QuizControllerTest extends TestCase
         $response->assertViewHas('quiz');
     }
 
-
     #[Test]
     public function store_uses_form_request_validation(): void
     {

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\CommentPosted;
 use App\Http\Requests\CommentStoreRequest;
 use App\Models\Comment;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {

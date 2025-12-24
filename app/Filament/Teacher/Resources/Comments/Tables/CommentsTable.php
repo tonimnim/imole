@@ -66,7 +66,7 @@ class CommentsTable
                 Action::make('view')
                     ->label('View')
                     ->icon('heroicon-o-eye')
-                    ->modalHeading(fn ($record) => 'Question from ' . $record->user->name)
+                    ->modalHeading(fn ($record) => 'Question from '.$record->user->name)
                     ->modalContent(fn ($record) => view('components.comment-view', ['record' => $record])),
             ])
             ->defaultSort('created_at', 'desc');

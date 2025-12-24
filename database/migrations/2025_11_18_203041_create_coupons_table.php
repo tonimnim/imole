@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('code', 50)->unique()->index();
             $table->text('description')->nullable();
-            $table->enum('discount_type', ["percentage","fixed"]);
+            $table->enum('discount_type', ['percentage', 'fixed']);
             $table->decimal('discount_value', 10, 2);
             $table->decimal('max_discount', 10, 2)->nullable();
             $table->foreignId('course_id')->nullable()->constrained();

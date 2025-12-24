@@ -20,6 +20,7 @@ class RegisteredUserController extends Controller
     public function create(Request $request): View
     {
         $role = $request->query('role', 'student');
+
         return view('auth.register', ['role' => $role]);
     }
 

@@ -28,7 +28,11 @@ class StudentHomeController extends Controller
             ->withCount('lessons');
 
         if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+            // Only filter by categories that exist and are active
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('id', $request->category)
+                    ->where('is_active', true);
+            });
         }
 
         $courses = $query->orderBy('created_at', 'desc')->get();

@@ -7,8 +7,6 @@ use App\Http\Requests\AssignmentSubmissionUpdateRequest;
 use App\Models\AssignmentSubmission;
 use App\Notification\AssignmentGradedNotification;
 use App\Notification\AssignmentSubmittedNotification;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
 class AssignmentSubmissionController extends Controller
@@ -27,7 +25,6 @@ class AssignmentSubmissionController extends Controller
     public function update(AssignmentSubmissionUpdateRequest $request, AssignmentSubmission $assignmentSubmission): Response
     {
         $assignmentSubmission = AssignmentSubmission::find($id);
-
 
         $assignmentSubmission->update($request->validated());
 

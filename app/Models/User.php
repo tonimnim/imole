@@ -96,4 +96,12 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(Course::class, 'enrollments')->withTimestamps();
     }
+
+    /**
+     * Get certificates for the user.
+     */
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 }

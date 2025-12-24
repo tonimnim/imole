@@ -59,7 +59,6 @@ final class QuizAttemptControllerTest extends TestCase
         });
     }
 
-
     #[Test]
     public function update_uses_form_request_validation(): void
     {
@@ -74,7 +73,7 @@ final class QuizAttemptControllerTest extends TestCase
     public function update_redirects(): void
     {
         $quizAttempt = QuizAttempt::factory()->create();
-        $answers = fake()->;
+        $answers = json_encode(['question_1' => 'answer_1', 'question_2' => 'answer_2']);
 
         Queue::fake();
 

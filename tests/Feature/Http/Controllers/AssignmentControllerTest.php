@@ -29,7 +29,6 @@ final class AssignmentControllerTest extends TestCase
         $response->assertViewHas('assignment');
     }
 
-
     #[Test]
     public function store_uses_form_request_validation(): void
     {

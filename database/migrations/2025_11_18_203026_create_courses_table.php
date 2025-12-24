@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longText('description');
             $table->text('objectives')->nullable();
             $table->text('requirements')->nullable();
-            $table->enum('level', ["beginner","intermediate","advanced"])->default('beginner');
+            $table->enum('level', ['beginner', 'intermediate', 'advanced'])->default('beginner');
             $table->string('language', 10)->default('en');
             $table->foreignId('instructor_id')->constrained('users');
             $table->foreignId('category_id')->constrained();
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2)->default(0);
             $table->string('currency', 3)->default('USD');
             $table->decimal('discount_price', 10, 2)->nullable();
-            $table->enum('status', ["draft","pending","published","archived"])->default('draft');
+            $table->enum('status', ['draft', 'pending', 'published', 'archived'])->default('draft');
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->integer('duration_minutes')->default(0);

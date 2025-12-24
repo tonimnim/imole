@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\QuizStoreRequest;
 use App\Models\Quiz;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class QuizController extends Controller
 {

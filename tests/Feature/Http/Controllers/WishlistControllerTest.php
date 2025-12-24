@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,7 +12,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 /**
- * @see \App\Http\Controllers\WishlistController
+ * @see \App\Http\Controllers\Student\WishlistController
  */
 final class WishlistControllerTest extends TestCase
 {
@@ -21,7 +22,7 @@ final class WishlistControllerTest extends TestCase
     public function store_uses_form_request_validation(): void
     {
         $this->assertActionUsesFormRequest(
-            \App\Http\Controllers\WishlistController::class,
+            \App\Http\Controllers\Student\WishlistController::class,
             'store',
             \App\Http\Requests\WishlistStoreRequest::class
         );
@@ -30,9 +31,10 @@ final class WishlistControllerTest extends TestCase
     #[Test]
     public function store_saves_and_redirects(): void
     {
+        $user = User::factory()->create();
         $course = Course::factory()->create();
 
-        $response = $this->post(route('wishlists.store'), [
+        $response = $this->actingAs($user)->post(route('wishlists.store'), [
             'course_id' => $course->id,
         ]);
 
@@ -42,19 +44,19 @@ final class WishlistControllerTest extends TestCase
         $this->assertCount(1, $wishlists);
         $wishlist = $wishlists->first();
 
-        $response->assertRedirect(route('course.show', ['course' => $course]));
+        $response->assertRedirect(route('courses.show', ['course' => $course]));
         $response->assertSessionHas('wishlist.course.title', $wishlist->course->title);
     }
-
 
     #[Test]
     public function destroy_deletes_and_redirects(): void
     {
+        $user = User::factory()->create();
         $wishlist = Wishlist::factory()->create();
 
-        $response = $this->delete(route('wishlists.destroy', $wishlist));
+        $response = $this->actingAs($user)->delete(route('wishlists.destroy', $wishlist));
 
-        $response->assertRedirect(route('wishlist.index'));
+        $response->assertRedirect(route('student.wishlist'));
 
         $this->assertModelMissing($wishlist);
     }

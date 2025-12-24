@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Comment;
 use App\Models\Lesson;
 use App\Models\Parent;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CommentFactory extends Factory
 {
@@ -26,7 +25,7 @@ class CommentFactory extends Factory
         return [
             'user_id' => User::factory(),
             'lesson_id' => Lesson::factory(),
-            'parent_id' => Parent::factory(),
+            'parent_id' => parent::factory(),
             'content' => fake()->paragraphs(3, true),
             'is_approved' => fake()->boolean(),
         ];

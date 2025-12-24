@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('slug', 255);
             $table->longText('content');
             $table->string('video_url', 500)->nullable();
-            $table->enum('video_provider', ["youtube","vimeo","custom"])->nullable();
+            $table->enum('video_provider', ['youtube', 'vimeo', 'custom'])->nullable();
             $table->integer('video_duration')->nullable();
-            $table->enum('type', ["video","text","quiz","assignment"])->default('video');
+            $table->enum('type', ['video', 'text', 'quiz', 'assignment'])->default('video');
             $table->integer('duration_minutes')->default(0);
             $table->integer('order')->default(0);
             $table->boolean('is_free')->default(false);

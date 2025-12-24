@@ -32,7 +32,6 @@ final class LessonControllerTest extends TestCase
         $response->assertViewHas('lessons');
     }
 
-
     #[Test]
     public function show_displays_view(): void
     {
@@ -44,7 +43,6 @@ final class LessonControllerTest extends TestCase
         $response->assertViewIs('lesson.show');
         $response->assertViewHas('lesson');
     }
-
 
     #[Test]
     public function store_uses_form_request_validation(): void
@@ -88,7 +86,6 @@ final class LessonControllerTest extends TestCase
             return $job->lesson->is($lesson);
         });
     }
-
 
     #[Test]
     public function update_uses_form_request_validation(): void

@@ -2,10 +2,9 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Question;
 use App\Models\Quiz;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class QuestionFactory extends Factory
 {
@@ -24,7 +23,7 @@ class QuestionFactory extends Factory
         return [
             'quiz_id' => Quiz::factory(),
             'question_text' => fake()->text(),
-            'question_type' => fake()->randomElement(["multiple_choice","true_false","short_answer","essay"]),
+            'question_type' => fake()->randomElement(['multiple_choice', 'true_false', 'short_answer', 'essay']),
             'options' => '{}',
             'correct_answer' => fake()->text(),
             'explanation' => fake()->text(),

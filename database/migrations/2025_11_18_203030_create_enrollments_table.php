@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamp('last_accessed_at')->nullable();
             $table->foreignId('payment_id')->nullable()->constrained();
             $table->decimal('price_paid', 10, 2)->default(0);
-            $table->enum('status', ["active","completed","expired","cancelled"])->default('active');
+            $table->enum('status', ['active', 'completed', 'expired', 'cancelled'])->default('active');
             $table->unique(['user_id', 'course_id']);
             $table->index(['course_id', 'status']);
             $table->timestamps();

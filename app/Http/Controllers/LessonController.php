@@ -6,9 +6,7 @@ use App\Http\Requests\LessonStoreRequest;
 use App\Http\Requests\LessonUpdateRequest;
 use App\Jobs\ProcessLessonVideo;
 use App\Models\Lesson;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class LessonController extends Controller
 {
@@ -42,7 +40,6 @@ class LessonController extends Controller
     public function update(LessonUpdateRequest $request, Lesson $lesson): Response
     {
         $lesson = Lesson::find($id);
-
 
         $lesson->update($request->validated());
 

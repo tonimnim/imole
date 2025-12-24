@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Payment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EnrollmentFactory extends Factory
 {
@@ -34,7 +33,7 @@ class EnrollmentFactory extends Factory
             'last_accessed_at' => fake()->dateTime(),
             'payment_id' => Payment::factory(),
             'price_paid' => fake()->randomFloat(2, 0, 99999999.99),
-            'status' => fake()->randomElement(["active","completed","expired","cancelled"]),
+            'status' => fake()->randomElement(['active', 'completed', 'expired', 'cancelled']),
         ];
     }
 }

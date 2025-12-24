@@ -1,0 +1,521 @@
+<x-app-layout>
+    <div class="min-h-screen bg-gray-900">
+        <!-- Top Navigation Bar -->
+        <div class="bg-gray-950 border-b border-gray-800 sticky top-0 z-50">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-14">
+                    <!-- Left: Back Button & Course Title -->
+                    <div class="flex items-center space-x-3 flex-1 min-w-0">
+                        <button onclick="window.location.href='{{ route('student.my-courses') }}'" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        <h1 class="text-sm sm:text-base font-semibold text-white truncate">{{ $course->title }}</h1>
+                    </div>
+
+                    <!-- Center: Progress (hidden on mobile) -->
+                    <div class="hidden md:flex items-center space-x-3">
+                        <span class="text-sm text-gray-400">{{ $progressPercentage }}% complete</span>
+                        <div class="w-32 bg-gray-800 rounded-full h-1.5">
+                            <div class="bg-purple-600 h-1.5 rounded-full transition-all" style="width: {{ $progressPercentage }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Mobile Menu Toggle -->
+                    <button id="mobile-menu-toggle" class="lg:hidden ml-2 text-gray-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-3.5rem)]">
+            <!-- Sidebar - Course Curriculum (Collapsible on mobile) -->
+            <div id="curriculum-sidebar" class="hidden lg:block lg:w-96 lg:flex-shrink-0 bg-gray-950 border-r border-gray-800 overflow-y-auto lg:max-h-[calc(100vh-3.5rem)]">
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold text-white">Course Content</h2>
+                        <button onclick="document.getElementById('curriculum-sidebar').classList.add('hidden')" class="lg:hidden text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    @foreach($modules as $module)
+                        <div class="mb-3">
+                            <button class="w-full flex items-center justify-between p-3 bg-gray-900 hover:bg-gray-800 rounded-lg text-left transition" onclick="toggleModule('module-{{ $module->id }}')">
+                                <div class="flex items-center space-x-2 flex-1">
+                                    <svg id="module-{{ $module->id }}-icon-closed" class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                    <svg id="module-{{ $module->id }}-icon-open" class="w-4 h-4 text-gray-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                    <span class="font-semibold text-white text-sm">{{ $module->title }}</span>
+                                </div>
+                                <span class="text-xs text-gray-500">{{ $module->lessons->count() }} lessons</span>
+                            </button>
+                            <div id="module-{{ $module->id }}-content" class="hidden mt-1 space-y-0.5 pl-4">
+                                @foreach($module->lessons as $moduleLesson)
+                                    <a href="{{ route('student.learn.lesson', ['course' => $course->slug, 'lesson' => $moduleLesson->slug]) }}"
+                                       class="flex items-center p-2.5 rounded-lg text-sm group {{ $moduleLesson->id === $lesson->id ? 'bg-purple-600/20 border border-purple-600/50' : 'hover:bg-gray-800/50' }} transition">
+                                        <div class="flex items-center flex-1 min-w-0 space-x-2">
+                                            @if(in_array($moduleLesson->id, $completedLessonIds))
+                                                <div class="flex-shrink-0 w-5 h-5 rounded-full bg-green-600 flex items-center justify-center">
+                                                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                </div>
+                                            @else
+                                                <div class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-gray-600"></div>
+                                            @endif
+                                            <span class="truncate {{ $moduleLesson->id === $lesson->id ? 'text-purple-400 font-medium' : 'text-gray-300' }}">{{ $moduleLesson->title }}</span>
+                                        </div>
+                                        <span class="flex-shrink-0 text-xs text-gray-500 ml-2">{{ $moduleLesson->duration_minutes }}min</span>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 flex flex-col lg:overflow-hidden">
+                <!-- Video Player -->
+                @if($lesson->video_url)
+                    <div class="bg-black flex-shrink-0 w-full" style="aspect-ratio: 16/9; max-height: 70vh;">
+                        @if($lesson->video_provider === 'youtube')
+                            @php
+                                preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\?]+)/', $lesson->video_url, $matches);
+                                $youtubeId = $matches[1] ?? '';
+                            @endphp
+                            <iframe
+                                id="lesson-video"
+                                class="w-full h-full"
+                                src="https://www.youtube.com/embed/{{ $youtubeId }}?start={{ $lessonProgress->last_position_seconds ?? 0 }}&enablejsapi=1"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        @elseif($lesson->video_provider === 'vimeo')
+                            @php
+                                preg_match('/vimeo\.com\/([0-9]+)/', $lesson->video_url, $matches);
+                                $vimeoId = $matches[1] ?? '';
+                            @endphp
+                            <iframe
+                                id="lesson-video"
+                                class="w-full h-full"
+                                src="https://player.vimeo.com/video/{{ $vimeoId }}"
+                                frameborder="0"
+                                allow="autoplay; fullscreen; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        @else
+                            <video id="lesson-video" class="w-full h-full" controls>
+                                <source src="{{ $lesson->video_url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        @endif
+                    </div>
+                @endif
+
+                <!-- Content Tabs & Panels -->
+                <div class="flex-1 overflow-y-auto bg-gray-900">
+                    <div class="w-full max-w-5xl mx-auto px-4 py-6 sm:px-6 sm:py-8">
+                        <!-- Lesson Header -->
+                        <div class="mb-6">
+                            <h1 class="text-2xl sm:text-3xl font-bold text-white mb-3">{{ $lesson->title }}</h1>
+
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                                <div class="flex-shrink-0">
+                                    @if(!$lessonProgress->is_completed)
+                                        <form action="{{ route('student.learn.complete', ['course' => $course->slug, 'lesson' => $lesson->slug]) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition">
+                                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                Mark as Complete
+                                            </button>
+                                        </form>
+                                    @else
+                                        <div class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-green-600/20 text-green-400 font-medium rounded-lg border border-green-600/50">
+                                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Completed
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Navigation Buttons -->
+                                <div class="flex gap-2 flex-1 sm:flex-initial">
+                                    @if($previousLesson)
+                                        <a href="{{ route('student.learn.lesson', ['course' => $course->slug, 'lesson' => $previousLesson->slug]) }}" class="flex-1 sm:flex-initial inline-flex items-center justify-center px-4 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition">
+                                            <svg class="w-5 h-5 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                            </svg>
+                                            <span class="hidden sm:inline">Previous</span>
+                                        </a>
+                                    @endif
+
+                                    @if($nextLesson)
+                                        <a href="{{ route('student.learn.lesson', ['course' => $course->slug, 'lesson' => $nextLesson->slug]) }}" class="flex-1 sm:flex-initial inline-flex items-center justify-center px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+                                            <span class="hidden sm:inline mr-1">Next Lesson</span>
+                                            <span class="sm:hidden mr-1">Next</span>
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabs Navigation -->
+                        <div class="border-b border-gray-800 mb-6 overflow-x-auto">
+                            <nav class="flex gap-4 sm:gap-6 -mb-px whitespace-nowrap">
+                                <button onclick="switchTab('overview', this)" class="tab-btn active px-2 py-3 text-sm font-medium border-b-2 transition touch-manipulation">
+                                    Overview
+                                </button>
+                                @if($lesson->resources->count() > 0)
+                                    <button onclick="switchTab('resources', this)" class="tab-btn px-2 py-3 text-sm font-medium border-b-2 transition touch-manipulation">
+                                        Resources <span class="text-xs">({{ $lesson->resources->count() }})</span>
+                                    </button>
+                                @endif
+                                <button onclick="switchTab('notes', this)" class="tab-btn px-2 py-3 text-sm font-medium border-b-2 transition touch-manipulation">
+                                    Notes <span class="text-xs">({{ $notes->count() }})</span>
+                                </button>
+                                @if($quiz)
+                                    <button onclick="switchTab('quiz', this)" class="tab-btn px-2 py-3 text-sm font-medium border-b-2 transition touch-manipulation">
+                                        Quiz
+                                    </button>
+                                @endif
+                                <button onclick="switchTab('qa', this)" class="tab-btn px-2 py-3 text-sm font-medium border-b-2 transition touch-manipulation">
+                                    Q&A <span class="text-xs">({{ $lesson->comments->count() }})</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Tab Panels -->
+                        <!-- Overview Panel -->
+                        <div id="tab-overview" class="tab-panel">
+                            <div class="prose prose-invert max-w-none">
+                                {!! $lesson->content !!}
+                            </div>
+                        </div>
+
+                        <!-- Resources Panel -->
+                        @if($lesson->resources->count() > 0)
+                            <div id="tab-resources" class="tab-panel hidden">
+                                <div class="space-y-3">
+                                    @foreach($lesson->resources as $resource)
+                                        <div class="bg-gray-800 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center gap-4 hover:bg-gray-750 transition">
+                                            <div class="flex items-center space-x-4 flex-1 min-w-0">
+                                                <div class="flex-shrink-0 w-12 h-12 bg-purple-600/20 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="font-semibold text-white truncate">{{ $resource->title }}</h4>
+                                                    <p class="text-sm text-gray-400">{{ strtoupper($resource->file_type) }} • {{ number_format($resource->file_size / 1024 / 1024, 2) }} MB</p>
+                                                </div>
+                                            </div>
+                                            <a href="{{ asset('storage/' . $resource->file_path) }}" download class="w-full sm:w-auto flex-shrink-0 inline-flex items-center justify-center px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                                </svg>
+                                                Download
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Notes Panel -->
+                        <div id="tab-notes" class="tab-panel hidden">
+                            <div class="mb-6">
+                                <form id="note-form" class="space-y-3">
+                                    @csrf
+                                    <textarea
+                                        id="note-content"
+                                        rows="4"
+                                        class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-600 focus:border-transparent resize-none"
+                                        placeholder="Take a note... (Press Ctrl+Enter to save)"
+                                    ></textarea>
+                                    <div class="flex justify-between items-center">
+                                        <label class="flex items-center text-sm text-gray-400">
+                                            <input type="checkbox" id="note-timestamp" class="mr-2 rounded bg-gray-800 border-gray-700 text-purple-600 focus:ring-purple-600">
+                                            Save current video timestamp
+                                        </label>
+                                        <button type="submit" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition">
+                                            Save Note
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div id="notes-list" class="space-y-3">
+                                @forelse($notes as $note)
+                                    <div class="bg-gray-800 rounded-lg p-4" data-note-id="{{ $note->id }}">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <div class="flex-1">
+                                                @if($note->video_timestamp)
+                                                    <button onclick="seekToTimestamp({{ $note->video_timestamp }})" class="text-xs text-purple-400 hover:text-purple-300 mb-1 flex items-center">
+                                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                        </svg>
+                                                        {{ $note->formatted_timestamp }}
+                                                    </button>
+                                                @endif
+                                                <p class="text-white whitespace-pre-wrap">{{ $note->content }}</p>
+                                            </div>
+                                            <button onclick="deleteNote({{ $note->id }})" class="ml-4 text-gray-400 hover:text-red-400 transition">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <p class="text-xs text-gray-500">{{ $note->created_at->diffForHumans() }}</p>
+                                    </div>
+                                @empty
+                                    <div class="text-center py-12">
+                                        <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                        <p class="text-gray-400">No notes yet. Start taking notes to remember key points!</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+
+                        <!-- Quiz Panel -->
+                        @if($quiz)
+                            <div id="tab-quiz" class="tab-panel hidden">
+                                <div class="bg-gradient-to-r from-purple-900/30 to-indigo-900/30 border border-purple-700/50 rounded-lg p-6 mb-6">
+                                    <h3 class="text-xl font-bold text-white mb-2">{{ $quiz->title }}</h3>
+                                    <p class="text-gray-300 mb-4">{{ $quiz->description }}</p>
+                                    <div class="flex flex-wrap gap-4 text-sm text-gray-300">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            {{ $quiz->questions->count() }} Questions
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            {{ $quiz->duration_minutes }} Minutes
+                                        </div>
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Passing Score: {{ $quiz->passing_score }}%
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg transition">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    Start Quiz
+                                </a>
+                            </div>
+                        @endif
+
+                        <!-- Q&A Panel -->
+                        <div id="tab-qa" class="tab-panel hidden">
+                            <div class="space-y-6">
+                                @forelse($lesson->comments as $comment)
+                                    <div class="border-b border-gray-800 pb-6">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                                                {{ substr($comment->user->name, 0, 1) }}
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="flex items-center space-x-2 mb-1">
+                                                    <h4 class="font-semibold text-white">{{ $comment->user->name }}</h4>
+                                                    <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <p class="text-gray-300">{{ $comment->content }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    <div class="text-center py-12">
+                                        <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                        </svg>
+                                        <p class="text-gray-400 mb-4">No questions yet. Be the first to ask!</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-toggle')?.addEventListener('click', function() {
+            document.getElementById('curriculum-sidebar').classList.toggle('hidden');
+            document.getElementById('curriculum-sidebar').classList.toggle('fixed');
+            document.getElementById('curriculum-sidebar').classList.toggle('inset-0');
+            document.getElementById('curriculum-sidebar').classList.toggle('z-40');
+        });
+
+        // Module toggle
+        function toggleModule(moduleId) {
+            const content = document.getElementById(moduleId + '-content');
+            const iconClosed = document.getElementById(moduleId + '-icon-closed');
+            const iconOpen = document.getElementById(moduleId + '-icon-open');
+
+            content.classList.toggle('hidden');
+            iconClosed.classList.toggle('hidden');
+            iconOpen.classList.toggle('hidden');
+        }
+
+        // Auto-open current lesson's module
+        @foreach($modules as $module)
+            @if($module->lessons->contains('id', $lesson->id))
+                toggleModule('module-{{ $module->id }}');
+            @endif
+        @endforeach
+
+        // Tab switching
+        function switchTab(tabName, element) {
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-purple-600', 'text-purple-400');
+                btn.classList.add('border-transparent', 'text-gray-400');
+            });
+
+            // Show selected panel
+            const panel = document.getElementById('tab-' + tabName);
+            if (panel) {
+                panel.classList.remove('hidden');
+            }
+
+            // Highlight active tab button
+            if (element) {
+                element.classList.add('active', 'border-purple-600', 'text-purple-400');
+                element.classList.remove('border-transparent', 'text-gray-400');
+            }
+        }
+
+        // Initialize tabs - set overview as active
+        document.addEventListener('DOMContentLoaded', function() {
+            const overviewTab = document.querySelector('[onclick*="overview"]');
+            if (overviewTab) {
+                overviewTab.classList.add('border-purple-600', 'text-purple-400');
+                overviewTab.classList.remove('border-transparent', 'text-gray-400');
+            }
+        });
+
+        // Notes functionality
+        document.getElementById('note-form')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const content = document.getElementById('note-content').value;
+            if (!content.trim()) return;
+
+            const timestamp = document.getElementById('note-timestamp').checked ? getCurrentVideoTime() : null;
+
+            try {
+                const response = await fetch('{{ route("student.learn.notes.save", ["course" => $course->slug, "lesson" => $lesson->slug]) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        video_timestamp: timestamp
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('note-content').value = '';
+                    document.getElementById('note-timestamp').checked = false;
+                    location.reload(); // Reload to show new note
+                }
+            } catch (error) {
+                console.error('Error saving note:', error);
+            }
+        });
+
+        async function deleteNote(noteId) {
+            if (!confirm('Are you sure you want to delete this note?')) return;
+
+            try {
+                const deleteUrl = `/learn/{{ $course->slug }}/{{ $lesson->slug }}/notes/${noteId}`;
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    document.querySelector(`[data-note-id="${noteId}"]`).remove();
+                }
+            } catch (error) {
+                console.error('Error deleting note:', error);
+            }
+        }
+
+        function getCurrentVideoTime() {
+            // This would need to be implemented based on your video player
+            return 0;
+        }
+
+        function seekToTimestamp(seconds) {
+            // This would need to be implemented based on your video player
+            console.log('Seeking to', seconds);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Enter to save note
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && document.activeElement.id === 'note-content') {
+                e.preventDefault();
+                document.getElementById('note-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+    @endpush
+
+    <style>
+        .tab-btn.active {
+            border-color: #9333ea;
+            color: #c084fc;
+        }
+        .tab-btn {
+            border-color: transparent;
+            color: #9ca3af;
+        }
+        .tab-btn:hover:not(.active) {
+            color: #d1d5db;
+        }
+    </style>
+</x-app-layout>

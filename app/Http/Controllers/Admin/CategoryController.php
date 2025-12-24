@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryStoreRequest;
 use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Models\Category;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
@@ -31,7 +29,6 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, Category $category): Response
     {
         $category = Category::find($id);
-
 
         $category->update($request->validated());
 

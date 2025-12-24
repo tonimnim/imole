@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Models\Course;
-use App\Models\Instructor;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CourseFactory extends Factory
 {
@@ -29,16 +28,16 @@ class CourseFactory extends Factory
             'description' => fake()->text(),
             'objectives' => fake()->text(),
             'requirements' => fake()->text(),
-            'level' => fake()->randomElement(["beginner","intermediate","advanced"]),
+            'level' => fake()->randomElement(['beginner', 'intermediate', 'advanced']),
             'language' => fake()->regexify('[A-Za-z0-9]{10}'),
-            'instructor_id' => Instructor::factory(),
+            'instructor_id' => User::factory(),
             'category_id' => Category::factory(),
             'thumbnail' => fake()->regexify('[A-Za-z0-9]{500}'),
             'preview_video' => fake()->regexify('[A-Za-z0-9]{500}'),
             'price' => fake()->randomFloat(2, 0, 99999999.99),
             'currency' => fake()->regexify('[A-Za-z0-9]{3}'),
             'discount_price' => fake()->randomFloat(2, 0, 99999999.99),
-            'status' => fake()->randomElement(["draft","pending","published","archived"]),
+            'status' => fake()->randomElement(['draft', 'pending', 'published', 'archived']),
             'is_published' => fake()->boolean(),
             'published_at' => fake()->dateTime(),
             'duration_minutes' => fake()->numberBetween(-10000, 10000),

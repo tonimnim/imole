@@ -5,6 +5,7 @@ namespace App\Filament\Teacher\Resources\Courses;
 use App\Filament\Teacher\Resources\Courses\Pages\CreateCourse;
 use App\Filament\Teacher\Resources\Courses\Pages\EditCourse;
 use App\Filament\Teacher\Resources\Courses\Pages\ListCourses;
+use App\Filament\Teacher\Resources\Courses\Pages\ViewCourse;
 use App\Filament\Teacher\Resources\Courses\Schemas\CourseForm;
 use App\Filament\Teacher\Resources\Courses\Tables\CoursesTable;
 use App\Models\Course;
@@ -46,7 +47,10 @@ class CourseResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ModulesRelationManager::class,
+            RelationManagers\EnrollmentsRelationManager::class,
+            RelationManagers\ReviewsRelationManager::class,
+            RelationManagers\AnnouncementsRelationManager::class,
         ];
     }
 
@@ -55,6 +59,7 @@ class CourseResource extends Resource
         return [
             'index' => ListCourses::route('/'),
             'create' => CreateCourse::route('/create'),
+            'view' => ViewCourse::route('/{record}'),
             'edit' => EditCourse::route('/{record}/edit'),
         ];
     }

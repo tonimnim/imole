@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Enrollment;
+use App\Models\Review;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ReviewStoreRequest extends FormRequest
@@ -11,7 +13,30 @@ class ReviewStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // User must be authenticated
+        if (! auth()->check()) {
+            return false;
+        }
+
+        $courseId = $this->input('course_id');
+
+        // Must be enrolled in the course
+        $isEnrolled = Enrollment::query()
+            ->where('user_id', auth()->id())
+            ->where('course_id', $courseId)
+            ->exists();
+
+        if (! $isEnrolled) {
+            return false;
+        }
+
+        // Cannot review the same course twice
+        $hasReviewed = Review::query()
+            ->where('user_id', auth()->id())
+            ->where('course_id', $courseId)
+            ->exists();
+
+        return ! $hasReviewed;
     }
 
     /**
@@ -20,9 +45,10 @@ class ReviewStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rating' => ['required', 'integer'],
-            'comment' => ['nullable', 'string'],
             'course_id' => ['required', 'integer', 'exists:courses,id'],
+            'rating' => ['required', 'integer', 'min:1', 'max:5'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'comment' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }

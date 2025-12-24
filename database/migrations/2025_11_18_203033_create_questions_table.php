@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('quiz_id')->constrained();
             $table->text('question_text');
-            $table->enum('question_type', ["multiple_choice","true_false","short_answer","essay"]);
+            $table->enum('question_type', ['multiple_choice', 'true_false', 'short_answer', 'essay']);
             $table->json('options')->nullable();
             $table->text('correct_answer');
             $table->text('explanation')->nullable();

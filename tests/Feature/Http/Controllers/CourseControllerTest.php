@@ -31,7 +31,6 @@ final class CourseControllerTest extends TestCase
         $response->assertViewHas('courses');
     }
 
-
     #[Test]
     public function show_displays_view(): void
     {
@@ -43,7 +42,6 @@ final class CourseControllerTest extends TestCase
         $response->assertViewIs('course.show');
         $response->assertViewHas('course');
     }
-
 
     #[Test]
     public function store_uses_form_request_validation(): void
@@ -92,7 +90,6 @@ final class CourseControllerTest extends TestCase
         });
     }
 
-
     #[Test]
     public function update_uses_form_request_validation(): void
     {
@@ -126,7 +123,6 @@ final class CourseControllerTest extends TestCase
         $this->assertEquals($description, $course->description);
         $this->assertEquals($price, $course->price);
     }
-
 
     #[Test]
     public function destroy_deletes_and_redirects(): void

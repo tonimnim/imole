@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AssignmentStoreRequest;
 use App\Models\Assignment;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class AssignmentController extends Controller
 {

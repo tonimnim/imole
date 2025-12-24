@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class QuizAttemptFactory extends Factory
 {
@@ -32,7 +31,7 @@ class QuizAttemptFactory extends Factory
             'total_points' => fake()->numberBetween(-10000, 10000),
             'earned_points' => fake()->numberBetween(-10000, 10000),
             'answers' => '{}',
-            'status' => fake()->randomElement(["in_progress","completed","graded"]),
+            'status' => fake()->randomElement(['in_progress', 'completed', 'graded']),
             'is_passed' => fake()->boolean(),
             'attempt_number' => fake()->numberBetween(-10000, 10000),
         ];

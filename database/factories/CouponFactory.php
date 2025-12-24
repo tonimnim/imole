@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Course;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CouponFactory extends Factory
 {
@@ -25,7 +24,7 @@ class CouponFactory extends Factory
         return [
             'code' => fake()->regexify('[A-Za-z0-9]{50}'),
             'description' => fake()->text(),
-            'discount_type' => fake()->randomElement(["percentage","fixed"]),
+            'discount_type' => fake()->randomElement(['percentage', 'fixed']),
             'discount_value' => fake()->randomFloat(2, 0, 99999999.99),
             'max_discount' => fake()->randomFloat(2, 0, 99999999.99),
             'course_id' => Course::factory(),

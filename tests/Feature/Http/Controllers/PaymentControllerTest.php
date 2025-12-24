@@ -62,7 +62,6 @@ final class PaymentControllerTest extends TestCase
         });
     }
 
-
     #[Test]
     public function show_displays_view(): void
     {
@@ -74,7 +73,6 @@ final class PaymentControllerTest extends TestCase
         $response->assertViewIs('payment.show');
         $response->assertViewHas('payment');
     }
-
 
     #[Test]
     public function verify_responds_with(): void
@@ -92,7 +90,6 @@ final class PaymentControllerTest extends TestCase
             return $job->payment->is($payment);
         });
     }
-
 
     #[Test]
     public function webhook_uses_form_request_validation(): void

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('total_points')->default(0);
             $table->integer('earned_points')->default(0);
             $table->json('answers')->nullable();
-            $table->enum('status', ["in_progress","completed","graded"])->default('in_progress');
+            $table->enum('status', ['in_progress', 'completed', 'graded'])->default('in_progress');
             $table->boolean('is_passed')->default(false);
             $table->integer('attempt_number')->default(1);
             $table->index(['user_id', 'quiz_id']);

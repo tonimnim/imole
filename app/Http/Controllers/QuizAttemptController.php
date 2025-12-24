@@ -7,8 +7,6 @@ use App\Http\Requests\QuizAttemptStoreRequest;
 use App\Http\Requests\QuizAttemptUpdateRequest;
 use App\Jobs\GradeQuizAttempt;
 use App\Models\QuizAttempt;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class QuizAttemptController extends Controller
 {
@@ -24,7 +22,6 @@ class QuizAttemptController extends Controller
     public function update(QuizAttemptUpdateRequest $request, QuizAttempt $quizAttempt): Response
     {
         $quizAttempt = QuizAttempt::find($id);
-
 
         $quizAttempt->update($request->validated());
 

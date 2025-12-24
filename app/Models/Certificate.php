@@ -37,8 +37,8 @@ class Certificate extends Model
             'user_id' => 'integer',
             'course_id' => 'integer',
             'enrollment_id' => 'integer',
-            'issued_at' => 'timestamp',
-            'valid_until' => 'timestamp',
+            'issued_at' => 'datetime',
+            'valid_until' => 'datetime',
         ];
     }
 

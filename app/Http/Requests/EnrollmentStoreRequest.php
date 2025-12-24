@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Enrollment;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EnrollmentStoreRequest extends FormRequest
@@ -11,7 +12,19 @@ class EnrollmentStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // User must be authenticated
+        if (! auth()->check()) {
+            return false;
+        }
+
+        // Check if user is not already enrolled in this course
+        $courseId = $this->input('course_id');
+        $alreadyEnrolled = Enrollment::query()
+            ->where('user_id', auth()->id())
+            ->where('course_id', $courseId)
+            ->exists();
+
+        return ! $alreadyEnrolled;
     }
 
     /**
@@ -20,7 +33,6 @@ class EnrollmentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
             'course_id' => ['required', 'integer', 'exists:courses,id'],
         ];
     }

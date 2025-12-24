@@ -3,323 +3,387 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Online courses for creative professionals - {{ config('app.name') }}</title>
-    <meta name="description" content="Browse our extensive catalog of courses taught by industry experts.">
+    <title>Browse Courses - {{ config('app.name') }}</title>
+    <meta name="description" content="Browse thousands of courses taught by expert instructors. Learn new skills and advance your career.">
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|poppins:500,600,700" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="antialiased bg-white dark:bg-gray-900" x-data="{
-    searchQuery: '',
-    selectedCategory: 'all',
-    selectedLevel: 'all',
-    courses: {{ json_encode($courses->values()->all()) }},
-    get filteredCourses() {
-        return this.courses.filter(course => {
-            const matchesSearch = course.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                                (course.subtitle && course.subtitle.toLowerCase().includes(this.searchQuery.toLowerCase()));
-            const matchesCategory = this.selectedCategory === 'all' || (course.category && course.category.slug === this.selectedCategory);
-            const matchesLevel = this.selectedLevel === 'all' || course.level === this.selectedLevel;
-            return matchesSearch && matchesCategory && matchesLevel;
-        });
-    },
-    get featuredCourses() {
-        return this.filteredCourses.filter(course => course.is_featured);
-    },
-    getCoursesByCategory(categoryId) {
-        return this.filteredCourses.filter(course => course.category_id === categoryId);
-    }
-}">
+<body class="antialiased bg-gray-50 dark:bg-gray-900" x-data="{ showFilters: false }">
 
     <x-header />
 
-    <main class="pt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
-
-                <!-- Sidebar Navigation -->
-                <aside class="lg:col-span-3 mb-8 lg:mb-0">
-                    <div class="sticky top-24">
-                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Courses</h2>
-
-                        <nav class="space-y-1">
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm font-medium text-red-600 border-l-2 border-red-600 bg-red-50 dark:bg-red-900/20">
-                                All courses
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                Guided courses
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                <span class="flex items-center gap-2">
-                                    Deep Dive
-                                    <span class="px-1.5 py-0.5 text-xs font-bold text-white bg-green-500 rounded">NEW</span>
-                                </span>
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                Specializations
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                Domestika Basics
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                New courses
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                Top rated
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                Popular courses
-                            </a>
-                            <a href="{{ route('courses.index') }}" class="flex items-center justify-between px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
-                                <span class="flex items-center gap-2">
-                                    Courses free with
-                                    <span class="text-red-600">♥ PLUS</span>
-                                </span>
-                            </a>
-                        </nav>
-
-                        <!-- Categories Section -->
-                        <div class="mt-8">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Categories</h3>
-                            <nav class="space-y-1">
-                                @foreach($categories ?? [] as $category)
-                                <button @click="selectedCategory = selectedCategory === '{{ $category->slug }}' ? 'all' : '{{ $category->slug }}'" :class="selectedCategory === '{{ $category->slug }}' ? 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'" class="w-full text-left block px-3 py-2 text-sm transition-colors">
-                                    {{ $category->name }}
-                                </button>
-                                @endforeach
-                            </nav>
-                        </div>
-
-                        <!-- Areas Section -->
-                        <div class="mt-8">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Areas</h3>
-                            <nav class="space-y-1">
-                                <a href="{{ route('courses.index') }}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Branding & Identity</a>
-                                <a href="{{ route('courses.index') }}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Graphic Design</a>
-                                <a href="{{ route('courses.index') }}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Social Media Design</a>
-                                <a href="{{ route('courses.index') }}" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">Web Design</a>
-                            </nav>
-                        </div>
-                    </div>
-                </aside>
-
-                <!-- Main Content -->
-                <div class="lg:col-span-9">
-                    <!-- Page Title -->
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8">
-                        Online courses for creative professionals
+    <div class="min-h-screen bg-gray-50 my-24 py-12 dark:bg-gray-900">
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
+                <div class="text-center">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
+                        Discover Your Next Learning Adventure
                     </h1>
+                    <p class="text-base sm:text-lg md:text-xl text-purple-100 mb-6 sm:mb-8 max-w-3xl mx-auto px-4">
+                        Browse thousands of courses taught by expert instructors. Learn new skills and advance your career.
+                    </p>
 
-                    <!-- Search and Filter Section -->
-                    <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-                        <!-- Search Bar -->
-                        <div class="relative mb-4">
-                            <svg class="absolute left-4 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <!-- Search Bar -->
+                    <div class="max-w-3xl mx-auto">
+                        <form action="{{ route('courses.index') }}" method="GET" class="relative">
+                            <input
+                                type="text"
+                                name="search"
+                                value="{{ $currentFilters['search'] ?? '' }}"
+                                placeholder="Search for courses..."
+                                class="w-full pl-12 sm:pl-14 pr-24 sm:pr-32 py-3 sm:py-4 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 shadow-xl text-base sm:text-lg"
+                            >
+                            <svg class="absolute left-4 sm:left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
-                            <input
-                                x-model="searchQuery"
-                                type="text"
-                                placeholder="Search courses by title or keyword..."
-                                class="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-colors"
-                            >
-                        </div>
-
-                        <!-- Filters Row -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Category Filter -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Category</label>
-                                <select x-model="selectedCategory" class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                                    <option value="all">All Categories</option>
-                                    @foreach($categories ?? [] as $category)
-                                        <option value="{{ $category->slug }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <!-- Level Filter -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Level</label>
-                                <select x-model="selectedLevel" class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                                    <option value="all">All Levels</option>
-                                    <option value="beginner">Beginner</option>
-                                    <option value="intermediate">Intermediate</option>
-                                    <option value="advanced">Advanced</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Active Filters -->
-                        <div class="mt-4 flex items-center gap-2 flex-wrap" x-show="searchQuery || selectedCategory !== 'all' || selectedLevel !== 'all'" style="display: none;">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">Active filters:</span>
-                            <button x-show="searchQuery" @click="searchQuery = ''" class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-sm flex items-center gap-1 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
-                                <span x-text="'Search: ' + searchQuery"></span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
+                            <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 sm:px-8 py-2 sm:py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm sm:text-base font-bold rounded-full transition-colors">
+                                Search
                             </button>
-                            <button x-show="selectedCategory !== 'all'" @click="selectedCategory = 'all'" class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-sm flex items-center gap-1 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
-                                <span x-text="'Category: ' + selectedCategory"></span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
-                            <button x-show="selectedLevel !== 'all'" @click="selectedLevel = 'all'" class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-sm flex items-center gap-1 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
-                                <span x-text="'Level: ' + selectedLevel.charAt(0).toUpperCase() + selectedLevel.slice(1)"></span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <!-- Results Counter -->
-                        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Showing <span x-text="filteredCourses.length" class="font-semibold text-gray-900 dark:text-white"></span>
-                                <span x-text="filteredCourses.length === 1 ? 'course' : 'courses'"></span>
-                            </p>
-                        </div>
+                        </form>
                     </div>
 
-                    <!-- Featured Section -->
-                    <template x-if="featuredCourses.length > 0">
-                        <section class="mb-12">
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Featured</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <template x-for="course in featuredCourses.slice(0, 3)" :key="course.id">
-                                    <div class="group relative">
-                                        <a :href="`/courses/${course.slug}`" class="block">
-                                            <!-- Course Image -->
-                                            <div class="relative overflow-hidden rounded-lg aspect-[4/3] bg-gray-200 dark:bg-gray-700 mb-3">
-                                                <template x-if="course.thumbnail">
-                                                    <img :src="'/storage/' + course.thumbnail" :alt="course.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                                </template>
-                                                <template x-if="!course.thumbnail">
-                                                    <div class="w-full h-full flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/20">
-                                                        <svg class="w-16 h-16 text-yellow-600 dark:text-yellow-400 opacity-50" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                                                        </svg>
-                                                    </div>
-                                                </template>
-                                                <div class="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-bold px-2.5 py-1 rounded">
-                                                    BEST SELLER
-                                                </div>
-                                            </div>
-                                            <!-- Course Details -->
-                                            <div>
-                                                <template x-if="course.category">
-                                                    <div class="mb-2">
-                                                        <span class="inline-block px-2 py-0.5 text-xs font-semibold text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded uppercase tracking-wide" x-text="course.category.name"></span>
-                                                    </div>
-                                                </template>
-                                                <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors" x-text="course.title"></h3>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-1">
-                                                    <span x-text="course.instructor ? 'A course by ' + course.instructor.name : course.subtitle"></span>
-                                                </p>
-                                                <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                                    <template x-if="course.average_rating > 0">
-                                                        <div class="flex items-center gap-1">
-                                                            <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                            </svg>
-                                                            <span class="font-medium text-gray-900 dark:text-white" x-text="course.average_rating.toFixed(1)"></span>
-                                                        </div>
-                                                    </template>
-                                                    <template x-if="course.students_count > 0">
-                                                        <div class="flex items-center gap-1">
-                                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                                                            </svg>
-                                                            <span x-text="course.students_count.toLocaleString()"></span>
-                                                        </div>
-                                                    </template>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </template>
-                            </div>
-                        </section>
-                    </template>
-
-                    <!-- Category Sections -->
-                    @foreach($categories ?? [] as $category)
-                        <template x-if="getCoursesByCategory({{ $category->id }}).length > 0">
-                            <section class="mb-12">
-                                <div class="flex items-center justify-between mb-6">
-                                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Online {{ $category->name }} courses</h2>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <template x-for="course in getCoursesByCategory({{ $category->id }}).slice(0, 3)" :key="course.id">
-                                        <div class="group relative">
-                                            <a :href="`/courses/${course.slug}`" class="block">
-                                                <!-- Course Image -->
-                                                <div class="relative overflow-hidden rounded-lg aspect-[4/3] bg-gray-200 dark:bg-gray-700 mb-3">
-                                                    <template x-if="course.thumbnail">
-                                                        <img :src="'/storage/' + course.thumbnail" :alt="course.title" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                                    </template>
-                                                    <template x-if="!course.thumbnail">
-                                                        <div class="w-full h-full flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/20">
-                                                            <svg class="w-16 h-16 text-yellow-600 dark:text-yellow-400 opacity-50" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                                                            </svg>
-                                                        </div>
-                                                    </template>
-                                                </div>
-                                                <!-- Course Details -->
-                                                <div>
-                                                    <template x-if="course.category">
-                                                        <div class="mb-2">
-                                                            <span class="inline-block px-2 py-0.5 text-xs font-semibold text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded uppercase tracking-wide" x-text="course.category.name"></span>
-                                                        </div>
-                                                    </template>
-                                                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors" x-text="course.title"></h3>
-                                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-1">
-                                                        <span x-text="course.instructor ? 'A course by ' + course.instructor.name : course.subtitle"></span>
-                                                    </p>
-                                                    <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                                                        <template x-if="course.average_rating > 0">
-                                                            <div class="flex items-center gap-1">
-                                                                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-                                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                                                </svg>
-                                                                <span class="font-medium text-gray-900 dark:text-white" x-text="course.average_rating.toFixed(1)"></span>
-                                                            </div>
-                                                        </template>
-                                                        <template x-if="course.students_count > 0">
-                                                            <div class="flex items-center gap-1">
-                                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                                                                </svg>
-                                                                <span x-text="course.students_count.toLocaleString()"></span>
-                                                            </div>
-                                                        </template>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </template>
-                                </div>
-                            </section>
-                        </template>
-                    @endforeach
-
-                    <!-- No Results State -->
-                    <div x-show="filteredCourses.length === 0" class="text-center py-12" style="display: none;">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                        <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">No courses found</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Try adjusting your search or filters.</p>
-                        <button @click="searchQuery = ''; selectedCategory = 'all'; selectedLevel = 'all'" class="mt-4 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
-                            Clear all filters
-                        </button>
+                    <!-- Stats -->
+                    <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-white">
+                        <div class="text-center">
+                            <div class="text-2xl sm:text-3xl font-bold">{{ number_format($courses->total()) }}</div>
+                            <div class="text-xs sm:text-sm text-purple-200">Courses</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl sm:text-3xl font-bold">{{ number_format($categories->count()) }}</div>
+                            <div class="text-xs sm:text-sm text-purple-200">Categories</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl sm:text-3xl font-bold">10K+</div>
+                            <div class="text-xs sm:text-sm text-purple-200">Students</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+                <!-- Desktop Sidebar Filters -->
+                <aside class="hidden lg:block lg:col-span-3">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sticky top-4">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Filters</h3>
+                            @if($currentFilters['category'] || $currentFilters['level'] || $currentFilters['search'])
+                                <a href="{{ route('courses.index') }}" class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium">
+                                    Clear all
+                                </a>
+                            @endif
+                        </div>
+
+                        <form action="{{ route('courses.index') }}" method="GET" id="filterForm">
+                            @if($currentFilters['search'])
+                                <input type="hidden" name="search" value="{{ $currentFilters['search'] }}">
+                            @endif
+
+                            <!-- Category Filter -->
+                            <div class="mb-6">
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Category</h4>
+                                <div class="space-y-2 max-h-64 overflow-y-auto">
+                                    <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ !$currentFilters['category'] ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}">
+                                        <input type="radio" name="category" value="" {{ !$currentFilters['category'] ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterForm').submit()">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300 font-medium">All Categories</span>
+                                    </label>
+                                    @foreach($categories as $category)
+                                        <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['category'] === $category->slug ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}">
+                                            <input type="radio" name="category" value="{{ $category->slug }}" {{ $currentFilters['category'] === $category->slug ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterForm').submit()">
+                                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">{{ $category->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Level Filter -->
+                            <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Level</h4>
+                                <div class="space-y-2">
+                                    <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ !$currentFilters['level'] ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}">
+                                        <input type="radio" name="level" value="" {{ !$currentFilters['level'] ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterForm').submit()">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300 font-medium">All Levels</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['level'] === 'beginner' ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}">
+                                        <input type="radio" name="level" value="beginner" {{ $currentFilters['level'] === 'beginner' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterForm').submit()">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Beginner</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['level'] === 'intermediate' ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}">
+                                        <input type="radio" name="level" value="intermediate" {{ $currentFilters['level'] === 'intermediate' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterForm').submit()">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Intermediate</span>
+                                    </label>
+                                    <label class="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['level'] === 'advanced' ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}">
+                                        <input type="radio" name="level" value="advanced" {{ $currentFilters['level'] === 'advanced' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterForm').submit()">
+                                        <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Advanced</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </aside>
+
+                <!-- Mobile Filter Modal/Drawer -->
+                <div x-show="showFilters"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0"
+                     x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100"
+                     x-transition:leave-end="opacity-0"
+                     class="fixed inset-0 z-50 lg:hidden"
+                     style="display: none;">
+                    <!-- Backdrop -->
+                    <div class="fixed inset-0 bg-black bg-opacity-50" @click="showFilters = false"></div>
+
+                    <!-- Drawer -->
+                    <div x-show="showFilters"
+                         x-transition:enter="transition ease-out duration-300 transform"
+                         x-transition:enter-start="-translate-x-full"
+                         x-transition:enter-end="translate-x-0"
+                         x-transition:leave="transition ease-in duration-200 transform"
+                         x-transition:leave-start="translate-x-0"
+                         x-transition:leave-end="-translate-x-full"
+                         class="relative w-80 max-w-full h-full bg-white dark:bg-gray-800 shadow-xl overflow-y-auto">
+
+                        <div class="p-6">
+                            <!-- Header -->
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Filters</h3>
+                                <button @click="showFilters = false" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            @if($currentFilters['category'] || $currentFilters['level'] || $currentFilters['search'])
+                                <a href="{{ route('courses.index') }}" class="block w-full mb-4 px-4 py-2 text-center text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg font-medium transition-colors">
+                                    Clear all filters
+                                </a>
+                            @endif
+
+                            <form action="{{ route('courses.index') }}" method="GET" id="filterFormMobile">
+                                @if($currentFilters['search'])
+                                    <input type="hidden" name="search" value="{{ $currentFilters['search'] }}">
+                                @endif
+
+                                <!-- Category Filter -->
+                                <div class="mb-6">
+                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Category</h4>
+                                    <div class="space-y-2 max-h-64 overflow-y-auto">
+                                        <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ !$currentFilters['category'] ? 'bg-purple-50 dark:bg-purple-900/20 ring-2 ring-purple-500' : '' }}">
+                                            <input type="radio" name="category" value="" {{ !$currentFilters['category'] ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterFormMobile').submit()">
+                                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300 font-medium">All Categories</span>
+                                        </label>
+                                        @foreach($categories as $category)
+                                            <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['category'] === $category->slug ? 'bg-purple-50 dark:bg-purple-900/20 ring-2 ring-purple-500' : '' }}">
+                                                <input type="radio" name="category" value="{{ $category->slug }}" {{ $currentFilters['category'] === $category->slug ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterFormMobile').submit()">
+                                                <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">{{ $category->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Level Filter -->
+                                <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Level</h4>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ !$currentFilters['level'] ? 'bg-purple-50 dark:bg-purple-900/20 ring-2 ring-purple-500' : '' }}">
+                                            <input type="radio" name="level" value="" {{ !$currentFilters['level'] ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterFormMobile').submit()">
+                                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300 font-medium">All Levels</span>
+                                        </label>
+                                        <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['level'] === 'beginner' ? 'bg-purple-50 dark:bg-purple-900/20 ring-2 ring-purple-500' : '' }}">
+                                            <input type="radio" name="level" value="beginner" {{ $currentFilters['level'] === 'beginner' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterFormMobile').submit()">
+                                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Beginner</span>
+                                        </label>
+                                        <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['level'] === 'intermediate' ? 'bg-purple-50 dark:bg-purple-900/20 ring-2 ring-purple-500' : '' }}">
+                                            <input type="radio" name="level" value="intermediate" {{ $currentFilters['level'] === 'intermediate' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterFormMobile').submit()">
+                                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Intermediate</span>
+                                        </label>
+                                        <label class="flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors {{ $currentFilters['level'] === 'advanced' ? 'bg-purple-50 dark:bg-purple-900/20 ring-2 ring-purple-500' : '' }}">
+                                            <input type="radio" name="level" value="advanced" {{ $currentFilters['level'] === 'advanced' ? 'checked' : '' }} class="text-purple-600 focus:ring-purple-500" onchange="document.getElementById('filterFormMobile').submit()">
+                                            <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Advanced</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Listing -->
+                <div class="lg:col-span-9">
+                    <!-- Mobile Filter Toggle + Sorting -->
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <!-- Mobile Filter Button -->
+                        <button @click="showFilters = true" class="lg:hidden flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                            </svg>
+                            <span class="font-bold text-gray-900 dark:text-white">Filters</span>
+                            @if($currentFilters['category'] || $currentFilters['level'])
+                                <span class="px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-bold">
+                                    Active
+                                </span>
+                            @endif
+                        </button>
+
+                        <!-- Page Title (Hidden on Mobile when Filter button shows) -->
+                        <div class="hidden sm:block flex-1">
+                            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                                @if($currentFilters['search'])
+                                    Search results for "{{ $currentFilters['search'] }}"
+                                @elseif($currentFilters['category'])
+                                    {{ $categories->firstWhere('slug', $currentFilters['category'])->name ?? 'Courses' }}
+                                @else
+                                    All Courses
+                                @endif
+                            </h2>
+                            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                {{ number_format($courses->total()) }} {{ Str::plural('course', $courses->total()) }} found
+                            </p>
+                        </div>
+
+                        <!-- Sort Dropdown -->
+                        <form action="{{ route('courses.index') }}" method="GET" class="flex items-center gap-2">
+                            @if($currentFilters['search'])
+                                <input type="hidden" name="search" value="{{ $currentFilters['search'] }}">
+                            @endif
+                            @if($currentFilters['category'])
+                                <input type="hidden" name="category" value="{{ $currentFilters['category'] }}">
+                            @endif
+                            @if($currentFilters['level'])
+                                <input type="hidden" name="level" value="{{ $currentFilters['level'] }}">
+                            @endif
+
+                            <label for="sort" class="hidden sm:inline text-sm text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap">Sort by:</label>
+                            <select name="sort" id="sort" onchange="this.form.submit()" class="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="featured" {{ $currentFilters['sort'] === 'featured' ? 'selected' : '' }}>Featured</option>
+                                <option value="newest" {{ $currentFilters['sort'] === 'newest' ? 'selected' : '' }}>Newest</option>
+                                <option value="popular" {{ $currentFilters['sort'] === 'popular' ? 'selected' : '' }}>Most Popular</option>
+                                <option value="rated" {{ $currentFilters['sort'] === 'rated' ? 'selected' : '' }}>Highest Rated</option>
+                            </select>
+                        </form>
+                    </div>
+
+                    <!-- Mobile Page Title -->
+                    <div class="sm:hidden mb-4">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                            @if($currentFilters['search'])
+                                Search results for "{{ $currentFilters['search'] }}"
+                            @elseif($currentFilters['category'])
+                                {{ $categories->firstWhere('slug', $currentFilters['category'])->name ?? 'Courses' }}
+                            @else
+                                All Courses
+                            @endif
+                        </h2>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {{ number_format($courses->total()) }} {{ Str::plural('course', $courses->total()) }} found
+                        </p>
+                    </div>
+
+                    <!-- Active Filters -->
+                    @if($currentFilters['search'] || $currentFilters['category'] || $currentFilters['level'])
+                        <div class="flex items-center gap-2 flex-wrap mb-6">
+                            <span class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Active filters:</span>
+
+                            @if($currentFilters['search'])
+                                <a href="{{ route('courses.index', array_filter(['category' => $currentFilters['category'], 'level' => $currentFilters['level'], 'sort' => $currentFilters['sort']])) }}" class="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs sm:text-sm hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors">
+                                    <span>Search: "{{ Str::limit($currentFilters['search'], 20) }}"</span>
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </a>
+                            @endif
+
+                            @if($currentFilters['category'])
+                                <a href="{{ route('courses.index', array_filter(['search' => $currentFilters['search'], 'level' => $currentFilters['level'], 'sort' => $currentFilters['sort']])) }}" class="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs sm:text-sm hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors">
+                                    <span>Category: {{ $categories->firstWhere('slug', $currentFilters['category'])->name ?? $currentFilters['category'] }}</span>
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </a>
+                            @endif
+
+                            @if($currentFilters['level'])
+                                <a href="{{ route('courses.index', array_filter(['search' => $currentFilters['search'], 'category' => $currentFilters['category'], 'sort' => $currentFilters['sort']])) }}" class="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs sm:text-sm hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors">
+                                    <span>Level: {{ ucfirst($currentFilters['level']) }}</span>
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+
+                    <!-- Courses Grid -->
+                    @if($courses->count() > 0)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mb-8">
+                            @foreach($courses as $course)
+                                <x-course-card-modern :course="$course" />
+                            @endforeach
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="mt-8">
+                            {{ $courses->links() }}
+                        </div>
+                    @else
+                        <!-- Empty State -->
+                        <div class="text-center py-12 sm:py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <svg class="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2">No courses found</h3>
+                            <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 px-4">
+                                We couldn't find any courses matching your criteria. Try adjusting your filters.
+                            </p>
+                            <a href="{{ route('courses.index') }}" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-purple-600 hover:bg-purple-700 text-white text-sm sm:text-base font-bold rounded-lg transition-colors">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Reset filters
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Showcase Section -->
+        @if(!$currentFilters['search'] && !$currentFilters['category'] && $categories->count() > 0)
+            <div class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-12 sm:py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-8 sm:mb-12">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-4">Explore by Category</h2>
+                        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400">Find the perfect course for your learning goals</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                        @foreach($categories->take(8) as $category)
+                            <a href="{{ route('courses.index', ['category' => $category->slug]) }}" class="group p-4 sm:p-6 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-100 dark:border-purple-800 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-lg transition-all">
+                                <div class="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-purple-600 rounded-lg mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                </div>
+                                <h3 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-1 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                                    {{ $category->name }}
+                                </h3>
+                                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                                    Explore courses
+                                </p>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
 
     <x-footer />
 

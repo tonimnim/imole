@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamp('graded_at')->nullable();
             $table->timestamp('submitted_at');
             $table->boolean('is_late')->default(false);
-            $table->enum('status', ["submitted","graded","returned","resubmitted"])->default('submitted');
+            $table->enum('status', ['submitted', 'graded', 'returned', 'resubmitted'])->default('submitted');
             $table->index(['assignment_id', 'user_id']);
             $table->timestamps();
         });

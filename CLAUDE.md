@@ -320,3 +320,114 @@ document.addEventListener('livewire:init', function () {
 
 - Always use Tailwind CSS v3 - verify you're using only classes supported by this version.
 </laravel-boost-guidelines>
+- Error - Internal Server Error
+
+Call to undefined method App\Http\Controllers\Student\StudentDashboardController::middleware()
+
+PHP 8.4.15
+Laravel 12.41.1
+127.0.0.1:8000
+
+## Stack Trace
+
+0 - app/Http/Controllers/Student/StudentDashboardController.php:15
+1 - vendor/laravel/framework/src/Illuminate/Container/Container.php:1182
+2 - vendor/laravel/framework/src/Illuminate/Container/Container.php:943
+3 - vendor/laravel/framework/src/Illuminate/Foundation/Application.php:1078
+4 - vendor/laravel/framework/src/Illuminate/Container/Container.php:874
+5 - vendor/laravel/framework/src/Illuminate/Foundation/Application.php:1058
+6 - vendor/laravel/framework/src/Illuminate/Routing/Route.php:286
+7 - vendor/laravel/framework/src/Illuminate/Routing/Route.php:266
+8 - vendor/laravel/framework/src/Illuminate/Routing/Route.php:211
+9 - vendor/laravel/framework/src/Illuminate/Routing/Router.php:822
+10 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:180
+11 - vendor/laravel/boost/src/Middleware/InjectBoost.php:22
+12 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+13 - vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php:50
+14 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+15 - vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php:63
+16 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+17 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php:87
+18 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+19 - vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php:48
+20 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+21 - vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php:120
+22 - vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php:63
+23 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+24 - vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php:36
+25 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+26 - vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php:74
+27 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+28 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:137
+29 - vendor/laravel/framework/src/Illuminate/Routing/Router.php:821
+30 - vendor/laravel/framework/src/Illuminate/Routing/Router.php:800
+31 - vendor/laravel/framework/src/Illuminate/Routing/Router.php:764
+32 - vendor/laravel/framework/src/Illuminate/Routing/Router.php:753
+33 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:200
+34 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:180
+35 - vendor/livewire/livewire/src/Features/SupportDisablingBackButtonCache/DisableBackButtonCacheMiddleware.php:19
+36 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+37 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php:21
+38 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php:31
+39 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+40 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php:21
+41 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php:51
+42 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+43 - vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php:27
+44 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+45 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php:109
+46 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+47 - vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php:48
+48 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+49 - vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php:58
+50 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+51 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php:22
+52 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+53 - vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php:26
+54 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:219
+55 - vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:137
+56 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:175
+57 - vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:144
+58 - vendor/laravel/framework/src/Illuminate/Foundation/Application.php:1220
+59 - public/index.php:20
+60 - vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php:23
+
+## Request
+
+GET /student/dashboard
+
+## Headers
+
+* **host**: 127.0.0.1:8000
+* **connection**: keep-alive
+* **cache-control**: max-age=0
+* **upgrade-insecure-requests**: 1
+* **user-agent**: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+* **accept**: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8
+* **sec-gpc**: 1
+* **accept-language**: en-US,en;q=0.8
+* **sec-fetch-site**: same-origin
+* **sec-fetch-mode**: navigate
+* **sec-fetch-user**: ?1
+* **sec-fetch-dest**: document
+* **sec-ch-ua**: "Chromium";v="142", "Brave";v="142", "Not_A Brand";v="99"
+* **sec-ch-ua-mobile**: ?0
+* **sec-ch-ua-platform**: "Linux"
+* **referer**: http://127.0.0.1:8000/login?redirect=http%3A%2F%2F127.0.0.1%3A8000%2Fcourses%2Fsustainable-farming-techniques
+* **accept-encoding**: gzip, deflate, br, zstd
+* **cookie**: XSRF-TOKEN=eyJpdiI6IllQMWx4SWtZdkJZbTRJYkNNQndkZ3c9PSIsInZhbHVlIjoiTmM3YlY1bWV6RUtJTUFxanBhT1dyVkFHNC83ekN5S1RIM3RTUGJoOGpSc29jM0FFRWNGUG9Yc0l1NXJWQzV6NytOT29pa0h5V3dyWmptNkpQM3d2bzl4M29KUStTK2FjZVVybThXbGprUHpqWHhmTzlpVEJQOXZWK0prR1lZWXkiLCJtYWMiOiJmM2MzYTNlMzcyYWZjOWY3ZDA2MGI3YjJkZjZhZmIxNDg5ZDRkOGMyMjA0M2EzOTlkMTc1ZTI4MjY3MjQzZGViIiwidGFnIjoiIn0%3D; laravel-session=eyJpdiI6IjBIdWI5RTlzQUE5NEZzL0Jqa0RldVE9PSIsInZhbHVlIjoia1lDcXlDQjV1UG8rbWpTQ2cwN1d3cy9RN0lHN1Z3QytSdkh0UnNCN21XSU5aUU1GYWFReCtLSE9qeXNXWHZWeW90M0M4NVJjakY0UnFVTzNTYWlBWDJpY2NPbFRnVE9kOHJkMCszeTFoMDFOb1lVU3ZIdFBTbllHL1NPQlVPeUYiLCJtYWMiOiJlYTVmZmQ3MzEzMjQxYjU5OTk5N2QyN2VlYTI0MWRhNmE4ODhjYTcxZDlhNGYyNGZjNmE1ODMzOGJlN2ZmYjlhIiwidGFnIjoiIn0%3D
+
+## Route Context
+
+controller: App\Http\Controllers\Student\StudentDashboardController@dashboard
+route name: student.dashboard
+middleware: web, auth
+
+## Route Parameters
+
+No route parameter data available.
+
+## Database Queries
+
+* pgsql - select * from "sessions" where "id" = 'Cd6dWno9YjXmiL3LyGfmmw9bZs66obhIpl7XyAVh' limit 1 (20.37 ms)
+* pgsql - select * from "users" where "id" = 33 limit 1 (2.3 ms)

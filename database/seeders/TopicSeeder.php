@@ -114,6 +114,6 @@ class TopicSeeder extends Seeder
             );
         }
 
-        $this->command->info('Successfully created ' . count($topics) . ' agricultural and vocational topics!');
+        $this->command->info('Successfully created '.count($topics).' agricultural and vocational topics!');
     }
 }

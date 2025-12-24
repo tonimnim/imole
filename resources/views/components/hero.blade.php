@@ -1,10 +1,23 @@
-<!-- Premium Hero Section -->
-<section class="relative pt-24 pb-12 bg-gradient-to-br from-green-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden">
-    <!-- Decorative Elements -->
-    <div class="absolute top-0 right-0 w-1/2 h-full opacity-10">
-        <svg viewBox="0 0 200 200" class="w-full h-full">
-            <circle cx="100" cy="100" r="80" fill="#EAB308"/>
+<!-- Premium Hero Section with Vibrant African Theme -->
+<section class="relative pt-24 pb-12 bg-gradient-to-br from-amber-50 via-green-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden">
+    <!-- Vibrant African Pattern Background -->
+    <div class="absolute inset-0 opacity-5">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="african-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="15" fill="#15803d" opacity="0.3"/>
+                    <circle cx="60" cy="60" r="15" fill="#f59e0b" opacity="0.3"/>
+                    <path d="M 0 40 Q 20 20, 40 40 T 80 40" stroke="#15803d" fill="none" stroke-width="2" opacity="0.2"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#african-pattern)"/>
         </svg>
+    </div>
+
+    <!-- Vibrant Decorative Circles -->
+    <div class="absolute top-0 right-0 w-1/2 h-full opacity-20">
+        <div class="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full blur-3xl"></div>
+        <div class="absolute top-40 right-40 w-48 h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-full blur-2xl"></div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,40 +81,50 @@
                 </div>
             </div>
 
-            <!-- Right Visual -->
+            <!-- Right Visual - Vibrant African Learning -->
             <div class="relative">
                 <div class="relative z-10">
-                    <!-- Main Image Container -->
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8">
-                        <img src="{{ asset('images/logo.png') }}" alt="Imole Africa" class="w-full h-auto">
+                    <!-- Main Image Container with Vibrant Border -->
+                    <div class="relative bg-gradient-to-br from-green-600 to-amber-500 rounded-2xl shadow-2xl p-1">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
+                                alt="African students learning together"
+                                class="w-full h-auto object-cover aspect-square"
+                                onerror="this.src='{{ asset('images/logo.png') }}'"
+                            >
+                        </div>
+                        <!-- Vibrant Accent Corner -->
+                        <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-2xl transform rotate-12 -z-10"></div>
+                        <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl transform -rotate-6 -z-10"></div>
                     </div>
 
-                    <!-- Floating Card 1 -->
-                    <div class="absolute -left-4 top-20 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 max-w-xs">
+                    <!-- Floating Card 1 - Vibrant Green -->
+                    <div class="absolute -left-4 top-20 bg-gradient-to-br from-green-500 to-green-700 rounded-xl shadow-2xl p-4 max-w-xs border-2 border-white transform hover:scale-105 transition-transform">
                         <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0 w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                                <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="flex-shrink-0 w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-green-700" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
                                 </svg>
                             </div>
                             <div>
-                                <div class="text-2xl font-bold text-gray-900 dark:text-white">1,200+</div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400">Courses Available</div>
+                                <div class="text-2xl font-bold text-white">1,200+</div>
+                                <div class="text-sm text-green-50">Courses Available</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Floating Card 2 -->
-                    <div class="absolute -right-4 bottom-20 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4">
+                    <!-- Floating Card 2 - Vibrant Amber -->
+                    <div class="absolute -right-4 bottom-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl shadow-2xl p-4 border-2 border-white transform hover:scale-105 transition-transform">
                         <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0 w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
-                                <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="flex-shrink-0 w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"/>
                                 </svg>
                             </div>
                             <div>
-                                <div class="text-2xl font-bold text-gray-900 dark:text-white">15</div>
-                                <div class="text-sm text-gray-600 dark:text-gray-400">Countries</div>
+                                <div class="text-2xl font-bold text-white">15+</div>
+                                <div class="text-sm text-amber-50">Countries</div>
                             </div>
                         </div>
                     </div>

@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Module;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LessonFactory extends Factory
 {
@@ -29,9 +28,9 @@ class LessonFactory extends Factory
             'slug' => fake()->slug(),
             'content' => fake()->paragraphs(3, true),
             'video_url' => fake()->regexify('[A-Za-z0-9]{500}'),
-            'video_provider' => fake()->randomElement(["youtube","vimeo","custom"]),
+            'video_provider' => fake()->randomElement(['youtube', 'vimeo', 'custom']),
             'video_duration' => fake()->numberBetween(-10000, 10000),
-            'type' => fake()->randomElement(["video","text","quiz","assignment"]),
+            'type' => fake()->randomElement(['video', 'text', 'quiz', 'assignment']),
             'duration_minutes' => fake()->numberBetween(-10000, 10000),
             'order' => fake()->numberBetween(-10000, 10000),
             'is_free' => fake()->boolean(),

@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Assignment;
 use App\Models\Course;
 use App\Models\Lesson;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AssignmentFactory extends Factory
 {

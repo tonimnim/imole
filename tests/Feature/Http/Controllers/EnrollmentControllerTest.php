@@ -63,7 +63,6 @@ final class EnrollmentControllerTest extends TestCase
         });
     }
 
-
     #[Test]
     public function show_displays_view(): void
     {

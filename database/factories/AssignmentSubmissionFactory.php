@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
 use App\Models\GradedBy;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class AssignmentSubmissionFactory extends Factory
 {
@@ -36,7 +35,7 @@ class AssignmentSubmissionFactory extends Factory
             'graded_at' => fake()->dateTime(),
             'submitted_at' => fake()->dateTime(),
             'is_late' => fake()->boolean(),
-            'status' => fake()->randomElement(["submitted","graded","returned","resubmitted"]),
+            'status' => fake()->randomElement(['submitted', 'graded', 'returned', 'resubmitted']),
             'grader_id' => User::factory(),
         ];
     }

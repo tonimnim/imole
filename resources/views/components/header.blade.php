@@ -67,7 +67,7 @@ class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b bord
                 <a href="/" class="flex items-center gap-3 group">
                     <div class="relative">
                         <div class="absolute inset-0 bg-yellow-600 rounded-xl blur-sm group-hover:blur-md transition-all opacity-50"></div>
-                        <img src="{{ asset('images/logo.png') }}" alt="Imole Africa" class="relative h-10 w-10 lg:h-12 lg:w-12">
+                        <img src="{{ asset('images/image.jpeg') }}" alt="Imole Africa" class="relative h-12 w-12 lg:h-12 lg:w-12">
                     </div>
                     <div class="hidden sm:flex flex-col">
                         <span class="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white leading-tight">Imole Africa</span>

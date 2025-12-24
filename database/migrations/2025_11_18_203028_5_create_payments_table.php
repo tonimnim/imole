@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('course_id')->constrained();
             $table->decimal('amount', 10, 2);
             $table->string('currency', 3)->default('NGN');
-            $table->enum('payment_method', ["card","bank","ussd","mobile_money","qr"])->default('card');
+            $table->enum('payment_method', ['card', 'bank', 'ussd', 'mobile_money', 'qr'])->default('card');
             $table->string('paystack_reference', 255)->unique()->index();
             $table->string('paystack_access_code', 255)->nullable();
             $table->string('paystack_authorization_code', 255)->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('gateway_response', 255)->nullable();
             $table->string('channel', 50)->nullable();
             $table->string('ip_address', 45)->nullable();
-            $table->enum('status', ["pending","success","failed","abandoned","refunded"])->default('pending');
+            $table->enum('status', ['pending', 'success', 'failed', 'abandoned', 'refunded'])->default('pending');
             $table->timestamp('paid_at')->nullable();
             $table->string('customer_email', 255);
             $table->string('customer_code', 100)->nullable();

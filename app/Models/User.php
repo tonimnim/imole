@@ -24,7 +24,16 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-
+        'avatar',
+        'headline',
+        'bio',
+        'expertise',
+        'website',
+        'twitter',
+        'linkedin',
+        'youtube',
+        'phone',
+        'location',
     ];
 
     /**
@@ -47,6 +56,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'expertise' => 'array',
         ];
     }
 

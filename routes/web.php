@@ -1,52 +1,107 @@
 <?php
 
-use App\Http\Controllers\Auth\TeacherRegistrationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Teacher\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
-    $featuredCourses = \App\Models\Course::query()
-        ->where('is_published', true)
-        ->where('is_featured', true)
-        ->with(['category', 'instructor'])
-        ->withCount(['enrollments', 'reviews'])
-        ->withAvg('reviews', 'rating')
-        ->orderBy('enrollments_count', 'desc')
-        ->take(8)
-        ->get()
-        ->map(function ($course) {
-            $course->students_count = $course->enrollments_count;
-            $course->average_rating = $course->reviews_avg_rating ?? 0;
-
-            return $course;
-        });
-
-    $categories = \App\Models\Category::query()
-        ->where('is_active', true)
-        ->whereNull('parent_id')
-        ->orderBy('order')
-        ->take(6)
-        ->get();
-
-    return view('welcome', compact('featuredCourses', 'categories'));
+    return view('welcome');
 })->name('home');
 
-Route::get('/teaching', function () {
-    return view('teaching');
-})->name('teaching');
+use App\Http\Controllers\Auth\TeacherAuthController;
 
-// Main dashboard route - redirects based on role
-Route::get('/dashboard', function () {
-    if (auth()->user()->hasRole('admin')) {
-        return redirect('/admin');
-    } elseif (auth()->user()->hasRole('teacher')) {
-        return redirect('/teacher');
-    } else {
-        return redirect()->route('student.dashboard');
-    }
-})->middleware('auth')->name('dashboard');
+Route::middleware('guest')->group(function () {
+    Route::get('teacher/register', [TeacherAuthController::class, 'create'])->name('teacher.register');
+    Route::post('teacher/register', [TeacherAuthController::class, 'store']);
 
-Route::middleware('auth')->group(function () {
+    Route::get('teacher/login', [TeacherAuthController::class, 'createLogin'])->name('teacher.login');
+    Route::post('teacher/login', [TeacherAuthController::class, 'storeLogin']);
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Teacher Portal Routes (Inertia + React)
+    Route::prefix('teacher')->name('teacher.')->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [\App\Http\Controllers\Teacher\TeacherDashboardController::class, 'index'])
+            ->name('dashboard'); // Result: route('teacher.dashboard')
+
+        // Redirect /teacher to /teacher/dashboard
+        Route::get('/', function () {
+            return redirect()->route('teacher.dashboard');
+        });
+
+    });
+
+    // Old Teacher Dashboard (Commented out for reference or deletion)
+    // Route::get('/teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard.old');
+
+    // Teacher Courses (Vue.js)
+
+    // Teacher Courses (Vue.js)
+    Route::get('/teacher/courses', [App\Http\Controllers\Teacher\TeacherCoursesController::class, 'index'])
+        ->name('teacher.courses');
+    Route::get('/teacher/courses/create', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'create'])
+        ->name('teacher.courses.create');
+    Route::post('/teacher/courses', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'store'])
+        ->name('teacher.courses.store');
+    Route::get('/teacher/courses/{course:id}/edit', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'edit'])
+        ->name('teacher.courses.edit');
+    Route::put('/teacher/courses/{course:id}', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'update'])
+        ->name('teacher.courses.update');
+
+    // Teacher Curriculum Builder
+    Route::get('/teacher/courses/{course:id}/curriculum', [App\Http\Controllers\Teacher\CurriculumPageController::class, 'show'])
+        ->name('teacher.curriculum');
+
+    // Teacher Content Management Pages
+    Route::get('/teacher/modules', [App\Http\Controllers\Teacher\TeacherModulesController::class, 'index'])
+        ->name('teacher.modules');
+    Route::get('/teacher/lessons', [App\Http\Controllers\Teacher\TeacherLessonsController::class, 'index'])
+        ->name('teacher.lessons');
+    Route::get('/teacher/assignments', [App\Http\Controllers\Teacher\TeacherAssignmentsController::class, 'index'])
+        ->name('teacher.assignments');
+    Route::get('/teacher/quizzes', [App\Http\Controllers\Teacher\TeacherQuizzesController::class, 'index'])
+        ->name('teacher.quizzes');
+    Route::get('/teacher/questions', [App\Http\Controllers\Teacher\TeacherQuestionsController::class, 'index'])
+        ->name('teacher.questions');
+
+    // Teacher Student & Engagement Pages
+    Route::get('/teacher/students', [App\Http\Controllers\Teacher\TeacherStudentsController::class, 'index'])
+        ->name('teacher.students');
+    Route::get('/teacher/reviews', [App\Http\Controllers\Teacher\TeacherReviewsController::class, 'index'])
+        ->name('teacher.reviews');
+
+    // Teacher Announcements (CRUD)
+    Route::get('/teacher/announcements', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'index'])
+        ->name('teacher.announcements');
+    Route::post('/teacher/announcements', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'store'])
+        ->name('teacher.announcements.store');
+    Route::put('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'update'])
+        ->name('teacher.announcements.update');
+    Route::delete('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'destroy'])
+        ->name('teacher.announcements.destroy');
+
+    // Teacher Certificates
+    Route::get('/teacher/certificates', [App\Http\Controllers\Teacher\TeacherCertificatesController::class, 'index'])
+        ->name('teacher.certificates');
+
+    // Teacher Profile
+    Route::get('/teacher/profile', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'index'])
+        ->name('teacher.profile');
+    Route::put('/teacher/profile', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'update'])
+        ->name('teacher.profile.update');
+    Route::post('/teacher/profile/avatar', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'updateAvatar'])
+        ->name('teacher.profile.avatar');
+    Route::delete('/teacher/profile/avatar', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'removeAvatar'])
+        ->name('teacher.profile.avatar.remove');
+
+    // Teacher Quiz Builder
+    Route::get('/teacher/quiz-builder', [App\Http\Controllers\Teacher\QuizBuilderPageController::class, 'index'])
+        ->name('teacher.quiz-builder');
+
+    // --- RESTORED STUDENT ROUTES ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -104,21 +159,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/success/{order}', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/failed/{order}', [App\Http\Controllers\CheckoutController::class, 'failed'])->name('checkout.failed');
-
-    // Teacher Curriculum Builder
-    Route::get('/teacher/courses/{course}/curriculum', [App\Http\Controllers\Teacher\CurriculumPageController::class, 'show'])
-        ->name('teacher.curriculum');
-
-    // Teacher Quiz Builder
-    Route::get('/teacher/quiz-builder', [App\Http\Controllers\Teacher\QuizBuilderPageController::class, 'index'])
-        ->name('teacher.quiz-builder');
 });
 
-Route::middleware('guest')->group(function () {
-    Route::get('teacher/register', [TeacherRegistrationController::class, 'create'])->name('teacher.register');
-    // {{ ... }}
-    Route::post('teacher/register', [TeacherRegistrationController::class, 'store'])->name('teacher.register.store');
-});
+// Main dashboard route - redirects based on role
+Route::get('/dashboard', function () {
+    /** @var \App\Models\User $user */
+    $user = auth()->user();
+
+    if ($user->hasRole('admin')) {
+        return redirect('/admin');
+    } elseif ($user->hasRole('teacher')) {
+        return redirect()->route('teacher.dashboard');
+    } else {
+        return redirect()->route('student.dashboard');
+    }
+})->middleware('auth')->name('dashboard');
 
 require __DIR__.'/auth.php';
 

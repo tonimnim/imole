@@ -254,8 +254,8 @@
                     <div>
                         <h4 class="text-white font-semibold mb-4">Teaching</h4>
                         <ul class="space-y-2">
-                            <li><a href="{{ route('teaching') }}" class="text-gray-400 hover:text-white text-sm transition-colors">Teach on Imole</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Teacher Dashboard</a></li>
+                            <li><a href="{{ route('teacher.register') }}" class="text-gray-400 hover:text-white text-sm transition-colors">Teach on Imole</a></li>
+                            <li><a href="{{ route('teacher.dashboard') }}" class="text-gray-400 hover:text-white text-sm transition-colors">Teacher Dashboard</a></li>
                         </ul>
                     </div>
                 </div>

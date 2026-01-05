@@ -34,7 +34,7 @@ class TeacherPanelProvider extends PanelProvider
     {
         return $panel
             ->id('teacher')
-            ->path('teacher')
+            ->path('teacher-filament')
             ->login()
             ->spa()
             ->colors([
@@ -59,7 +59,8 @@ class TeacherPanelProvider extends PanelProvider
                 ReviewResource::class,
                 CertificateResource::class,
             ])
-            ->discoverPages(in: app_path('Filament/Teacher/Pages'), for: 'App\Filament\Teacher\Pages')
+            ->pages([])
+            ->homeUrl('/teacher')
             ->discoverWidgets(in: app_path('Filament/Teacher/Widgets'), for: 'App\Filament\Teacher\Widgets')
             ->widgets([
                 // Custom widgets only - AccountWidget and FilamentInfoWidget removed

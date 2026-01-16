@@ -8,8 +8,12 @@
                     <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Stay Updated</h3>
                     <p class="text-yellow-100 text-lg">Subscribe to our newsletter for the latest courses, programs, and educational resources.</p>
                 </div>
-                <form class="flex flex-col sm:flex-row gap-3">
-                    <input type="email" placeholder="Enter your email address" class="flex-1 px-5 py-3.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent">
+                <form action="{{ route('contact.submit') }}" method="POST" class="flex flex-col sm:flex-row gap-3">
+                    @csrf
+                    <input type="hidden" name="subject" value="Newsletter Subscription">
+                    <input type="hidden" name="name" value="Subscriber">
+                    <input type="hidden" name="message" value="Please subscribe me to the newsletter.">
+                    <input type="email" name="email" placeholder="Enter your email address" required class="flex-1 px-5 py-3.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-yellow-200 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent">
                     <button type="submit" class="px-8 py-3.5 bg-white text-yellow-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
                         Subscribe
                     </button>
@@ -21,10 +25,10 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 md:gap-12 mb-12">
             <!-- Brand -->
             <div class="col-span-2 md:col-span-3 lg:col-span-2">
-                <div class="flex items-center space-x-2 mb-4">
-                    <img src="{{ asset('images/logo.png') }}" alt="Imole Africa" class="h-10 w-10">
-                    <span class="text-xl font-bold">Imole Africa Foundation</span>
-                </div>
+                <a href="{{ url('/') }}" class="flex items-center space-x-2 mb-4 group">
+                    <img src="{{ asset('images/image.jpeg') }}" alt="Imole Africa" class="h-10 w-10 rounded-lg group-hover:opacity-90 transition-opacity">
+                    <span class="text-xl font-bold group-hover:text-yellow-400 transition-colors">Imole Africa</span>
+                </a>
                 <p class="text-gray-400 mb-6 max-w-md leading-relaxed">Transforming education across Africa through innovative digital learning solutions. Empowering educators and learners with 21st-century skills.</p>
                 <div class="flex space-x-3">
                     <a href="#" class="w-11 h-11 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-yellow-600 transition-colors group">
@@ -49,27 +53,27 @@
             <div>
                 <h4 class="font-bold text-lg mb-4 text-white">Company</h4>
                 <ul class="space-y-3 text-gray-400">
-                    <li><a href="/#about" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('about') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         About Us
                     </a></li>
-                    <li><a href="/#programs" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('programs') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Our Programs
                     </a></li>
-                    <li><a href="/#impact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('impact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Our Impact
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('about') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Our Team
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Careers
                     </a></li>
-                    <li><a href="/#contact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Contact
                     </a></li>
@@ -111,27 +115,27 @@
             <div>
                 <h4 class="font-bold text-lg mb-4 text-white">Resources</h4>
                 <ul class="space-y-3 text-gray-400">
-                    <li><a href="/#contact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Help Center
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('courses.index') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Student Resources
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('teacher.register') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Teacher Resources
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('home') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Blog
                     </a></li>
-                    <li><a href="/#contact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         FAQs
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('courses.index') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Downloads
                     </a></li>
@@ -146,23 +150,23 @@
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Become a Teacher
                     </a></li>
-                    <li><a href="/#contact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Partner With Us
                     </a></li>
-                    <li><a href="/#contact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Volunteer
                     </a></li>
-                    <li><a href="/#contact" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Donate
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('contact') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Scholarships
                     </a></li>
-                    <li><a href="/#" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
+                    <li><a href="{{ route('about') }}" class="hover:text-yellow-400 transition-colors flex items-center gap-2 group">
                         <svg class="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         Community
                     </a></li>
@@ -219,13 +223,13 @@
                 © 2025 Imole Africa Foundation. All rights reserved. | Registered Non-Profit Organization
             </p>
             <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-sm text-gray-400">
-                <a href="/#contact" class="hover:text-yellow-400 transition-colors">Privacy Policy</a>
+                <a href="{{ route('privacy') }}" class="hover:text-yellow-400 transition-colors">Privacy Policy</a>
                 <span class="text-gray-700">•</span>
-                <a href="/#contact" class="hover:text-yellow-400 transition-colors">Terms of Service</a>
+                <a href="{{ route('terms') }}" class="hover:text-yellow-400 transition-colors">Terms of Service</a>
                 <span class="text-gray-700">•</span>
-                <a href="/#contact" class="hover:text-yellow-400 transition-colors">Cookie Policy</a>
+                <a href="{{ route('cookies') }}" class="hover:text-yellow-400 transition-colors">Cookie Policy</a>
                 <span class="text-gray-700">•</span>
-                <a href="/#contact" class="hover:text-yellow-400 transition-colors">Accessibility</a>
+                <a href="{{ route('accessibility') }}" class="hover:text-yellow-400 transition-colors">Accessibility</a>
             </div>
         </div>
     </div>

@@ -5,9 +5,23 @@ use App\Http\Controllers\Teacher\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Static Pages
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/programs', [PageController::class, 'programs'])->name('programs');
+Route::get('/impact', [PageController::class, 'impact'])->name('impact');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact', [PageController::class, 'submitContact'])->name('contact.submit');
+
+// Legal Pages
+Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+Route::get('/cookies', [PageController::class, 'cookies'])->name('cookies');
+Route::get('/accessibility', [PageController::class, 'accessibility'])->name('accessibility');
 
 use App\Http\Controllers\Auth\TeacherAuthController;
 

@@ -723,7 +723,7 @@
                                 <span class="text-gray-700 dark:text-gray-300 leading-relaxed font-medium">Access powerful teaching tools and analytics dashboard</span>
                             </li>
                         </ul>
-                        <a href="#" class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105">
+                        <a href="{{ route('teacher.register') }}" class="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold rounded-xl transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105">
                             <span>Start Teaching Today</span>
                             <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\View\View;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,9 +19,9 @@ class TeacherAuthController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create(): \Illuminate\View\View
     {
-        return Inertia::render('Auth/TeacherRegister');
+        return view('auth.teacher-register');
     }
 
     /**

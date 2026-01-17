@@ -141,11 +141,20 @@
                                 <span class="font-semibold">Ksh{{ number_format($subtotal, 2) }}</span>
                             </div>
 
-                            <!-- Discount (if applicable) -->
-                            @if($subtotal !== $total)
+                            <!-- Coupon Discount (if applicable) -->
+                            @if(isset($discount) && $discount > 0)
                                 <div class="flex items-center justify-between text-green-600 dark:text-green-400">
-                                    <span>Discount:</span>
-                                    <span class="font-semibold">-Ksh{{ number_format($subtotal - $total, 2) }}</span>
+                                    <div class="flex items-center gap-2">
+                                        <span>Coupon ({{ $couponCode }}):</span>
+                                        <form method="POST" action="{{ route('cart.remove-coupon') }}" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:text-red-700 text-xs">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <span class="font-semibold">-Ksh{{ number_format($discount, 2) }}</span>
                                 </div>
                             @endif
 
@@ -164,24 +173,42 @@
 
                             <!-- Coupon Code -->
                             <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <form method="POST" action="{{ route('cart.apply-coupon') }}">
-                                    @csrf
-                                    <label for="coupon_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Have a coupon code?
-                                    </label>
-                                    <div class="flex gap-2">
-                                        <input
-                                            type="text"
-                                            id="coupon_code"
-                                            name="coupon_code"
-                                            placeholder="Enter code"
-                                            class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                        >
-                                        <button type="submit" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white text-sm font-semibold rounded-lg transition-colors">
-                                            Apply
-                                        </button>
+                                @if(isset($couponCode) && $couponCode)
+                                    <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span class="text-sm font-medium text-green-700 dark:text-green-400">{{ $couponCode }}</span>
+                                        </div>
+                                        <form method="POST" action="{{ route('cart.remove-coupon') }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-sm text-red-600 hover:text-red-700 font-medium">
+                                                Remove
+                                            </button>
+                                        </form>
                                     </div>
-                                </form>
+                                @else
+                                    <form method="POST" action="{{ route('cart.apply-coupon') }}">
+                                        @csrf
+                                        <label for="coupon_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Have a coupon code?
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <input
+                                                type="text"
+                                                id="coupon_code"
+                                                name="coupon_code"
+                                                placeholder="Enter code"
+                                                class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            >
+                                            <button type="submit" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white text-sm font-semibold rounded-lg transition-colors">
+                                                Apply
+                                            </button>
+                                        </div>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -16,7 +16,9 @@ class Order extends Model
         'payment_status',
         'subtotal',
         'tax',
+        'discount',
         'total',
+        'coupon_id',
         'payment_reference',
         'paid_at',
     ];
@@ -24,6 +26,7 @@ class Order extends Model
     protected $casts = [
         'subtotal' => 'decimal:2',
         'tax' => 'decimal:2',
+        'discount' => 'decimal:2',
         'total' => 'decimal:2',
         'paid_at' => 'datetime',
     ];
@@ -31,6 +34,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function coupon(): BelongsTo
+    {
+        return $this->belongsTo(Coupon::class);
     }
 
     public function items(): HasMany

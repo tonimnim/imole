@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Enrollment;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -37,14 +38,29 @@ class CheckoutController extends Controller
         }
 
         $subtotal = $cartItems->sum('final_price');
-        $tax = 0; // Add tax calculation if needed
-        $total = $subtotal + $tax;
+
+        // Get coupon discount from session
+        $discount = 0;
+        $coupon = null;
+        $couponCode = session('coupon_code');
+        if ($couponCode) {
+            $coupon = $this->getValidCoupon($couponCode, $cartItems);
+            if ($coupon) {
+                $discount = $this->calculateDiscount($coupon, $cartItems);
+            }
+        }
+
+        $tax = 0;
+        $total = max(0, $subtotal - $discount + $tax);
 
         return view('checkout.index', [
             'cartItems' => $cartItems,
             'subtotal' => $subtotal,
+            'discount' => $discount,
             'tax' => $tax,
             'total' => $total,
+            'coupon' => $coupon,
+            'couponCode' => $couponCode,
             'paystackPublicKey' => $this->paystack->getPublicKey(),
         ]);
     }
@@ -59,7 +75,7 @@ class CheckoutController extends Controller
         // Get cart items
         $cartItems = Cart::query()
             ->where('user_id', auth()->id())
-            ->with('course')
+            ->with(['course.category'])
             ->get();
 
         if ($cartItems->isEmpty()) {
@@ -68,10 +84,21 @@ class CheckoutController extends Controller
                 ->with('error', 'Your cart is empty.');
         }
 
-        // Calculate totals
+        // Calculate totals with coupon
         $subtotal = $cartItems->sum('final_price');
+        $discount = 0;
+        $coupon = null;
+        $couponCode = session('coupon_code');
+
+        if ($couponCode) {
+            $coupon = $this->getValidCoupon($couponCode, $cartItems);
+            if ($coupon) {
+                $discount = $this->calculateDiscount($coupon, $cartItems);
+            }
+        }
+
         $tax = 0;
-        $total = $subtotal + $tax;
+        $total = max(0, $subtotal - $discount + $tax);
 
         try {
             DB::beginTransaction();
@@ -84,8 +111,10 @@ class CheckoutController extends Controller
                 'payment_method' => $validated['payment_method'],
                 'payment_status' => 'pending',
                 'subtotal' => $subtotal,
+                'discount' => $discount,
                 'tax' => $tax,
                 'total' => $total,
+                'coupon_id' => $coupon?->id,
             ]);
 
             // Create order items
@@ -148,8 +177,14 @@ class CheckoutController extends Controller
             // Create enrollments
             $this->createEnrollments($order);
 
-            // Clear cart
+            // Increment coupon usage if used
+            if ($order->coupon_id) {
+                Coupon::where('id', $order->coupon_id)->increment('usage_count');
+            }
+
+            // Clear cart and coupon from session
             Cart::where('user_id', auth()->id())->delete();
+            session()->forget('coupon_code');
 
             DB::commit();
 
@@ -259,8 +294,14 @@ class CheckoutController extends Controller
             // Create enrollments
             $this->createEnrollments($order);
 
-            // Clear cart
+            // Increment coupon usage if used
+            if ($order->coupon_id) {
+                Coupon::where('id', $order->coupon_id)->increment('usage_count');
+            }
+
+            // Clear cart and coupon from session
             Cart::where('user_id', $order->user_id)->delete();
+            session()->forget('coupon_code');
 
             DB::commit();
 
@@ -332,6 +373,11 @@ class CheckoutController extends Controller
                     // Create enrollments
                     $this->createEnrollments($order);
 
+                    // Increment coupon usage if used
+                    if ($order->coupon_id) {
+                        Coupon::where('id', $order->coupon_id)->increment('usage_count');
+                    }
+
                     // Clear cart
                     Cart::where('user_id', $order->user_id)->delete();
 
@@ -362,12 +408,88 @@ class CheckoutController extends Controller
                     'course_id' => $item->course_id,
                 ],
                 [
-                    'enrollment_status' => 'active',
+                    'status' => 'active',
                     'enrolled_at' => now(),
                     'price_paid' => $item->discount_price ?? $item->price,
                 ]
             );
         }
+    }
+
+    protected function getValidCoupon(string $code, $cartItems): ?Coupon
+    {
+        $coupon = Coupon::where('code', strtoupper($code))
+            ->where('is_active', true)
+            ->first();
+
+        if (! $coupon) {
+            return null;
+        }
+
+        // Check validity dates
+        $now = now();
+        if ($coupon->valid_from && $now->lt($coupon->valid_from)) {
+            return null;
+        }
+        if ($coupon->valid_until && $now->gt($coupon->valid_until)) {
+            return null;
+        }
+
+        // Check if coupon applies to any cart item
+        $applies = false;
+        foreach ($cartItems as $item) {
+            if ($this->couponAppliesToItem($coupon, $item)) {
+                $applies = true;
+                break;
+            }
+        }
+
+        return $applies ? $coupon : null;
+    }
+
+    protected function couponAppliesToItem(Coupon $coupon, Cart $item): bool
+    {
+        // Course-specific coupon
+        if ($coupon->course_id) {
+            return $coupon->course_id === $item->course_id;
+        }
+
+        // Category-specific coupon
+        if ($coupon->category_id) {
+            return $coupon->category_id === $item->course->category_id;
+        }
+
+        // Global coupon (no course_id and no category_id)
+        return true;
+    }
+
+    protected function calculateDiscount(Coupon $coupon, $cartItems): float
+    {
+        $totalDiscount = 0;
+
+        foreach ($cartItems as $item) {
+            if (! $this->couponAppliesToItem($coupon, $item)) {
+                continue;
+            }
+
+            $itemPrice = $item->final_price;
+
+            if ($coupon->discount_type === 'percentage') {
+                $itemDiscount = $itemPrice * ($coupon->discount_value / 100);
+            } else {
+                // Fixed discount - apply to each applicable item
+                $itemDiscount = min($coupon->discount_value, $itemPrice);
+            }
+
+            $totalDiscount += $itemDiscount;
+        }
+
+        // Apply max discount cap if set
+        if ($coupon->max_discount && $totalDiscount > $coupon->max_discount) {
+            $totalDiscount = $coupon->max_discount;
+        }
+
+        return round($totalDiscount, 2);
     }
 
     public function success(Request $request, string $orderNumber): View

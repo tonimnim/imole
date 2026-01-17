@@ -157,7 +157,7 @@
 
                                 @if($course->price > 0)
                                     <div class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                                        ₦{{ number_format($course->price, 2) }}
+                                        Ksh{{ number_format($course->price, 2) }}
                                     </div>
                                 @else
                                     <div class="text-lg font-bold text-green-600 dark:text-green-400 mb-3">

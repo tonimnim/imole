@@ -114,7 +114,7 @@ export default function CoursesIndex({ courses, stats }) {
                                     </TableCell>
                                     <TableCell>
                                         {parseFloat(course.price) > 0 ? (
-                                            <span className="font-medium">₦{parseFloat(course.price).toLocaleString()}</span>
+                                            <span className="font-medium">Ksh{parseFloat(course.price).toLocaleString()}</span>
                                         ) : (
                                             <Badge variant="secondary">Free</Badge>
                                         )}

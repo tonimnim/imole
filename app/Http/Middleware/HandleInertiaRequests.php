@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Announcement;
+use App\Models\UserNotification;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -54,6 +56,33 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            'unreadNotifications' => fn () => $user ? $this->getUnreadNotificationCount($user) : 0,
         ];
+    }
+
+    /**
+     * Get the count of unread notifications for a user.
+     */
+    private function getUnreadNotificationCount($user): int
+    {
+        // Determine user role for filtering
+        $role = $user->hasRole('teacher') ? 'teachers' : 'students';
+
+        // Get all active announcements for this user's role
+        $announcements = Announcement::query()
+            ->platformWide()
+            ->active()
+            ->forAudience($role)
+            ->pluck('id');
+
+        // Get read notification IDs
+        $readNotifications = UserNotification::query()
+            ->where('user_id', $user->id)
+            ->whereIn('announcement_id', $announcements)
+            ->where('is_read', true)
+            ->pluck('announcement_id');
+
+        // Return count of unread
+        return $announcements->diff($readNotifications)->count();
     }
 }

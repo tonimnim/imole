@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Illuminate\View\View;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class TeacherAuthController extends Controller
 {
@@ -50,49 +47,5 @@ class TeacherAuthController extends Controller
         Auth::login($user);
 
         return redirect()->route('teacher.dashboard');
-    }
-
-    /**
-     * Display the login view.
-     */
-    public function createLogin(): Response
-    {
-        return Inertia::render('Auth/TeacherLogin', [
-            'status' => session('status'),
-        ]);
-    }
-
-    /**
-     * Handle an incoming login request.
-     */
-    public function storeLogin(Request $request): RedirectResponse
-    {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-
-            /** @var \App\Models\User $user */
-            $user = Auth::user();
-
-            // Redirect logic based on role
-            if ($user->hasRole('teacher')) {
-                return redirect()->intended(route('teacher.dashboard'));
-            }
-
-            if ($user->hasRole('admin')) {
-                return redirect()->intended('/admin');
-            }
-
-            // Default fallback for students or others
-            return redirect()->intended(route('student.dashboard'));
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
     }
 }

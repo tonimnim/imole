@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PageController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -28,9 +27,6 @@ use App\Http\Controllers\Auth\TeacherAuthController;
 Route::middleware('guest')->group(function () {
     Route::get('teacher/register', [TeacherAuthController::class, 'create'])->name('teacher.register');
     Route::post('teacher/register', [TeacherAuthController::class, 'store']);
-
-    Route::get('teacher/login', [TeacherAuthController::class, 'createLogin'])->name('teacher.login');
-    Route::post('teacher/login', [TeacherAuthController::class, 'storeLogin']);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -97,6 +93,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'destroy'])
         ->name('teacher.announcements.destroy');
 
+    // Teacher Notifications
+    Route::get('/teacher/notifications', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'index'])
+        ->name('teacher.notifications');
+    Route::post('/teacher/notifications/{announcement}/read', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'markAsRead'])
+        ->name('teacher.notifications.read');
+    Route::post('/teacher/notifications/read-all', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'markAllAsRead'])
+        ->name('teacher.notifications.read-all');
+
     // Teacher Certificates
     Route::get('/teacher/certificates', [App\Http\Controllers\Teacher\TeacherCertificatesController::class, 'index'])
         ->name('teacher.certificates');
@@ -126,6 +130,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/my-courses', [App\Http\Controllers\Student\StudentDashboardController::class, 'myCourses'])->name('my-courses');
         Route::get('/certificates', [App\Http\Controllers\Student\StudentDashboardController::class, 'certificates'])->name('certificates');
         Route::get('/wishlist', [App\Http\Controllers\Student\WishlistController::class, 'index'])->name('wishlist');
+        Route::get('/notifications', [App\Http\Controllers\Student\StudentNotificationsController::class, 'index'])->name('notifications');
+        Route::post('/notifications/{announcement}/read', [App\Http\Controllers\Student\StudentNotificationsController::class, 'markAsRead'])->name('notifications.read');
+        Route::post('/notifications/read-all', [App\Http\Controllers\Student\StudentNotificationsController::class, 'markAllAsRead'])->name('notifications.read-all');
     });
 
     // Course Learning Routes
@@ -175,13 +182,64 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout/failed/{order}', [App\Http\Controllers\CheckoutController::class, 'failed'])->name('checkout.failed');
 });
 
+// Admin Portal Routes (Inertia + React)
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Users
+    Route::get('/users', [App\Http\Controllers\Admin\AdminUsersController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [App\Http\Controllers\Admin\AdminUsersController::class, 'create'])->name('users.create');
+    Route::post('/users', [App\Http\Controllers\Admin\AdminUsersController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [App\Http\Controllers\Admin\AdminUsersController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [App\Http\Controllers\Admin\AdminUsersController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [App\Http\Controllers\Admin\AdminUsersController::class, 'destroy'])->name('users.destroy');
+
+    // Courses
+    Route::get('/courses', [App\Http\Controllers\Admin\AdminCoursesController::class, 'index'])->name('courses.index');
+    Route::post('/courses/{course}/toggle-publish', [App\Http\Controllers\Admin\AdminCoursesController::class, 'togglePublish'])->name('courses.toggle-publish');
+    Route::post('/courses/{course}/toggle-featured', [App\Http\Controllers\Admin\AdminCoursesController::class, 'toggleFeatured'])->name('courses.toggle-featured');
+    Route::delete('/courses/{course}', [App\Http\Controllers\Admin\AdminCoursesController::class, 'destroy'])->name('courses.destroy');
+
+    // Categories
+    Route::get('/categories', [App\Http\Controllers\Admin\AdminCategoriesController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [App\Http\Controllers\Admin\AdminCategoriesController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [App\Http\Controllers\Admin\AdminCategoriesController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [App\Http\Controllers\Admin\AdminCategoriesController::class, 'destroy'])->name('categories.destroy');
+
+    // Payments
+    Route::get('/payments', [App\Http\Controllers\Admin\AdminPaymentsController::class, 'index'])->name('payments.index');
+
+    // Revenue
+    Route::get('/revenue', [App\Http\Controllers\Admin\AdminRevenueController::class, 'index'])->name('revenue.index');
+
+    // Enrollments
+    Route::get('/enrollments', [App\Http\Controllers\Admin\AdminEnrollmentsController::class, 'index'])->name('enrollments.index');
+    Route::delete('/enrollments/{enrollment}', [App\Http\Controllers\Admin\AdminEnrollmentsController::class, 'destroy'])->name('enrollments.destroy');
+
+    // Announcements
+    Route::get('/announcements', [App\Http\Controllers\Admin\AdminAnnouncementsController::class, 'index'])->name('announcements.index');
+    Route::post('/announcements', [App\Http\Controllers\Admin\AdminAnnouncementsController::class, 'store'])->name('announcements.store');
+    Route::put('/announcements/{announcement}', [App\Http\Controllers\Admin\AdminAnnouncementsController::class, 'update'])->name('announcements.update');
+    Route::post('/announcements/{announcement}/toggle', [App\Http\Controllers\Admin\AdminAnnouncementsController::class, 'togglePublish'])->name('announcements.toggle');
+    Route::delete('/announcements/{announcement}', [App\Http\Controllers\Admin\AdminAnnouncementsController::class, 'destroy'])->name('announcements.destroy');
+
+    // Reports
+    Route::get('/reports', [App\Http\Controllers\Admin\AdminReportsController::class, 'index'])->name('reports.index');
+
+    // Settings
+    Route::get('/settings', [App\Http\Controllers\Admin\AdminSettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings/clear-cache', [App\Http\Controllers\Admin\AdminSettingsController::class, 'clearCache'])->name('settings.clear-cache');
+    Route::post('/settings/optimize', [App\Http\Controllers\Admin\AdminSettingsController::class, 'optimizeApp'])->name('settings.optimize');
+});
+
 // Main dashboard route - redirects based on role
 Route::get('/dashboard', function () {
     /** @var \App\Models\User $user */
     $user = auth()->user();
 
     if ($user->hasRole('admin')) {
-        return redirect('/admin');
+        return redirect()->route('admin.dashboard');
     } elseif ($user->hasRole('teacher')) {
         return redirect()->route('teacher.dashboard');
     } else {

@@ -31,7 +31,7 @@ export default function Dashboard({ stats, recentEnrollments, topCourses }) {
                         <DollarSign className="h-4 w-4 text-green-600" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">₦{stats.totalRevenue.toLocaleString()}</div>
+                        <div className="text-2xl font-bold">Ksh{stats.totalRevenue.toLocaleString()}</div>
                         <p className="text-xs text-muted-foreground">Lifetime earnings</p>
                     </CardContent>
                 </Card>
@@ -94,7 +94,7 @@ export default function Dashboard({ stats, recentEnrollments, topCourses }) {
                                             </span>
                                         </TableCell>
                                         <TableCell>{course.students}</TableCell>
-                                        <TableCell className="text-right">₦{parseFloat(course.price).toLocaleString()}</TableCell>
+                                        <TableCell className="text-right">Ksh{parseFloat(course.price).toLocaleString()}</TableCell>
                                     </TableRow>
                                 )) : (
                                     <TableRow>
@@ -126,7 +126,7 @@ export default function Dashboard({ stats, recentEnrollments, topCourses }) {
                                         <p className="text-xs text-muted-foreground line-clamp-1">{enrollment.course}</p>
                                     </div>
                                     <div className="ml-auto font-medium text-xs text-green-600">
-                                        +₦{parseFloat(enrollment.amount).toLocaleString()}
+                                        +Ksh{parseFloat(enrollment.amount).toLocaleString()}
                                     </div>
                                 </div>
                             )) : (

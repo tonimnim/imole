@@ -112,7 +112,7 @@
                                         <div class="flex-shrink-0 text-right">
                                             @if($item->course->price > 0)
                                                 <div class="text-lg font-bold text-gray-900 dark:text-white">
-                                                    ₦{{ number_format($item->course->price, 2) }}
+                                                    Ksh{{ number_format($item->course->price, 2) }}
                                                 </div>
                                             @else
                                                 <div class="text-lg font-bold text-green-600 dark:text-green-400">
@@ -138,14 +138,14 @@
                             <!-- Subtotal -->
                             <div class="flex items-center justify-between text-gray-700 dark:text-gray-300">
                                 <span>Subtotal:</span>
-                                <span class="font-semibold">₦{{ number_format($subtotal, 2) }}</span>
+                                <span class="font-semibold">Ksh{{ number_format($subtotal, 2) }}</span>
                             </div>
 
                             <!-- Discount (if applicable) -->
                             @if($subtotal !== $total)
                                 <div class="flex items-center justify-between text-green-600 dark:text-green-400">
                                     <span>Discount:</span>
-                                    <span class="font-semibold">-₦{{ number_format($subtotal - $total, 2) }}</span>
+                                    <span class="font-semibold">-Ksh{{ number_format($subtotal - $total, 2) }}</span>
                                 </div>
                             @endif
 
@@ -153,7 +153,7 @@
                             <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
                                 <div class="flex items-center justify-between text-lg">
                                     <span class="font-bold text-gray-900 dark:text-white">Total:</span>
-                                    <span class="font-bold text-gray-900 dark:text-white">₦{{ number_format($total, 2) }}</span>
+                                    <span class="font-bold text-gray-900 dark:text-white">Ksh{{ number_format($total, 2) }}</span>
                                 </div>
                             </div>
 

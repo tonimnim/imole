@@ -13,14 +13,14 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Admin Users
+        // Always create the admin user
         $this->createAdmins();
 
-        // Create Teacher Users
-        $this->createTeachers();
-
-        // Create Student Users
-        $this->createStudents();
+        // Only seed test users in non-production environments
+        if (app()->environment('local', 'development', 'testing')) {
+            $this->createTeachers();
+            $this->createStudents();
+        }
     }
 
     /**
@@ -28,25 +28,19 @@ class UsersSeeder extends Seeder
      */
     private function createAdmins(): void
     {
-        $admins = [
+        $user = User::firstOrCreate(
+            ['email' => 'admin@imoleafrika.com'],
             [
                 'name' => 'Super Admin',
-                'email' => 'admin@imoleafrica.com',
-                'password' => Hash::make('password'),
-            ],
-            [
-                'name' => 'Admin User',
-                'email' => 'admin@example.com',
-                'password' => Hash::make('password'),
-            ],
-        ];
+                'password' => Hash::make('!Joan0790144'),
+            ]
+        );
 
-        foreach ($admins as $admin) {
-            $user = User::create($admin);
+        if (! $user->hasRole('admin')) {
             $user->assignRole('admin');
         }
 
-        $this->command->info('✓ Created '.count($admins).' admin users');
+        $this->command->info('✓ Admin user ready');
     }
 
     /**

@@ -274,7 +274,7 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <h4 class="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2">{{ $item->course->title }}</h4>
-                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">₦{{ number_format($item->course->price, 2) }}</p>
+                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">Ksh{{ number_format($item->course->price, 2) }}</p>
                                         </div>
                                     </div>
                                 @endforeach
@@ -284,21 +284,21 @@
                                 <!-- Subtotal -->
                                 <div class="flex items-center justify-between text-gray-700 dark:text-gray-300">
                                     <span>Subtotal:</span>
-                                    <span class="font-semibold">₦{{ number_format($subtotal, 2) }}</span>
+                                    <span class="font-semibold">Ksh{{ number_format($subtotal, 2) }}</span>
                                 </div>
 
                                 <!-- Tax -->
                                 @if($tax > 0)
                                     <div class="flex items-center justify-between text-gray-700 dark:text-gray-300">
                                         <span>Tax (VAT):</span>
-                                        <span class="font-semibold">₦{{ number_format($tax, 2) }}</span>
+                                        <span class="font-semibold">Ksh{{ number_format($tax, 2) }}</span>
                                     </div>
                                 @endif
 
                                 <!-- Total -->
                                 <div class="flex items-center justify-between text-lg pt-3 border-t border-gray-200 dark:border-gray-700">
                                     <span class="font-bold text-gray-900 dark:text-white">Total:</span>
-                                    <span class="font-bold text-purple-600 dark:text-purple-400">₦{{ number_format($total, 2) }}</span>
+                                    <span class="font-bold text-purple-600 dark:text-purple-400">Ksh{{ number_format($total, 2) }}</span>
                                 </div>
                             </div>
 

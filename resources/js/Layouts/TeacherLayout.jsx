@@ -16,12 +16,13 @@ import {
     Menu,
     X,
     LogOut,
-    User
+    User,
+    Bell
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 export default function TeacherLayout({ children }) {
-    const { auth } = usePage().props;
+    const { auth, unreadNotifications } = usePage().props;
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const navigation = [
@@ -41,6 +42,7 @@ export default function TeacherLayout({ children }) {
 
         { group: 'Communication' },
         { name: 'Announcements', href: route('teacher.announcements'), icon: Megaphone, current: route().current('teacher.announcements*') },
+        { name: 'Notifications', href: route('teacher.notifications'), icon: Bell, current: route().current('teacher.notifications*'), badge: unreadNotifications },
 
         { group: 'Rewards' },
         { name: 'Certificates', href: route('teacher.certificates'), icon: Trophy, current: route().current('teacher.certificates') },
@@ -72,12 +74,25 @@ export default function TeacherLayout({ children }) {
                     <span className="text-2xl font-bold text-gray-900 tracking-tight">
                         Imole<span className="text-green-600">.</span>
                     </span>
-                    <button 
-                        className="ml-auto lg:hidden text-gray-500"
-                        onClick={() => setSidebarOpen(false)}
-                    >
-                        <X size={24} />
-                    </button>
+                    <div className="ml-auto flex items-center gap-2">
+                        <Link
+                            href={route('teacher.notifications')}
+                            className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
+                        >
+                            <Bell size={20} />
+                            {unreadNotifications > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                    {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                                </span>
+                            )}
+                        </Link>
+                        <button
+                            className="lg:hidden text-gray-500"
+                            onClick={() => setSidebarOpen(false)}
+                        >
+                            <X size={24} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Navigation Links */}
@@ -93,13 +108,18 @@ export default function TeacherLayout({ children }) {
                                 href={item.href}
                                 className={cn(
                                     "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                                    item.current 
-                                        ? "bg-green-50 text-green-700" 
+                                    item.current
+                                        ? "bg-green-50 text-green-700"
                                         : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                                 )}
                             >
                                 <item.icon className={cn("mr-3 h-5 w-5", item.current ? "text-green-600" : "text-gray-400 group-hover:text-gray-500")} />
                                 {item.name}
+                                {item.badge > 0 && (
+                                    <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {item.badge > 99 ? '99+' : item.badge}
+                                    </span>
+                                )}
                             </Link>
                         )
                     ))}
@@ -140,14 +160,24 @@ export default function TeacherLayout({ children }) {
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Mobile Header */}
                 <header className="lg:hidden h-16 bg-white border-b border-gray-200 flex items-center px-4 justify-between">
-                    <button 
+                    <button
                         className="text-gray-500 focus:outline-none"
                         onClick={() => setSidebarOpen(true)}
                     >
                         <Menu size={24} />
                     </button>
                     <span className="text-xl font-bold text-gray-900">Imole</span>
-                    <div className="w-6" /> {/* Spacer for centering if needed */}
+                    <Link
+                        href={route('teacher.notifications')}
+                        className="relative p-2 text-gray-500 hover:text-gray-700"
+                    >
+                        <Bell size={20} />
+                        {unreadNotifications > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                            </span>
+                        )}
+                    </Link>
                 </header>
 
                 {/* Page Content */}

@@ -180,6 +180,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/success/{order}', [App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/failed/{order}', [App\Http\Controllers\CheckoutController::class, 'failed'])->name('checkout.failed');
+
+    // Paystack Callback (user returns here after payment)
+    Route::get('/paystack/callback', [App\Http\Controllers\CheckoutController::class, 'paystackCallback'])->name('paystack.callback');
 });
 
 // Admin Portal Routes (Inertia + React)
@@ -279,3 +282,7 @@ Route::resource('payments', App\Http\Controllers\PaymentController::class)->only
 Route::resource('wishlists', App\Http\Controllers\Student\WishlistController::class)->only('store', 'destroy');
 
 Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class)->except('create', 'edit', 'show');
+
+// Paystack Webhook (called by Paystack servers - CSRF excluded in bootstrap/app.php)
+Route::post('/paystack/webhook', [App\Http\Controllers\CheckoutController::class, 'paystackWebhook'])
+    ->name('paystack.webhook');

@@ -88,7 +88,7 @@
                                             name="phone"
                                             value="{{ old('phone') }}"
                                             required
-                                            placeholder="+234 800 000 0000"
+                                            placeholder="+254 700 000 000"
                                             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         >
                                     </div>
@@ -105,9 +105,9 @@
                                             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         >
                                             <option value="">Select Country</option>
+                                            <option value="KE" {{ old('country') == 'KE' ? 'selected' : '' }}>Kenya</option>
                                             <option value="NG" {{ old('country') == 'NG' ? 'selected' : '' }}>Nigeria</option>
                                             <option value="GH" {{ old('country') == 'GH' ? 'selected' : '' }}>Ghana</option>
-                                            <option value="KE" {{ old('country') == 'KE' ? 'selected' : '' }}>Kenya</option>
                                             <option value="ZA" {{ old('country') == 'ZA' ? 'selected' : '' }}>South Africa</option>
                                             <option value="OTHER" {{ old('country') == 'OTHER' ? 'selected' : '' }}>Other</option>
                                         </select>
@@ -123,13 +123,13 @@
                             <h2 class="text-lg font-bold text-gray-900 dark:text-white">Payment Method</h2>
                         </div>
                         <div class="p-6">
-                            <div class="space-y-3" x-data="{ paymentMethod: 'mpesa' }">
-                                <!-- M-Pesa Payment (Primary) -->
-                                <label class="flex items-start gap-3 p-4 border-2 border-green-500 dark:border-green-500 rounded-lg cursor-pointer bg-green-50 dark:bg-green-900/20 relative">
+                            <div class="space-y-3" x-data="{ paymentMethod: 'card' }">
+                                <!-- Card Payment via Paystack (Primary) -->
+                                <label class="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="paymentMethod === 'card' ? 'border-purple-600 dark:border-purple-500 bg-purple-50 dark:bg-purple-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-500'">
                                     <input
                                         type="radio"
                                         name="payment_method"
-                                        value="mpesa"
+                                        value="card"
                                         form="checkout-form"
                                         x-model="paymentMethod"
                                         class="mt-1"
@@ -137,11 +137,37 @@
                                     >
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-1">
+                                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                            </svg>
+                                            <span class="font-semibold text-gray-900 dark:text-white">Credit/Debit Card</span>
+                                            <span class="ml-2 px-2 py-0.5 bg-purple-600 text-white text-xs font-bold rounded">RECOMMENDED</span>
+                                        </div>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Pay securely with Visa, Mastercard, or Verve via Paystack</p>
+                                        <div class="flex items-center gap-2 mt-2">
+                                            <img src="https://cdn.paystack.co/assets/img/logos/visa.svg" alt="Visa" class="h-6">
+                                            <img src="https://cdn.paystack.co/assets/img/logos/mastercard.svg" alt="Mastercard" class="h-6">
+                                            <img src="https://cdn.paystack.co/assets/img/logos/verve.svg" alt="Verve" class="h-6">
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <!-- M-Pesa Payment -->
+                                <label class="flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-colors" :class="paymentMethod === 'mpesa' ? 'border-green-600 dark:border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-500'">
+                                    <input
+                                        type="radio"
+                                        name="payment_method"
+                                        value="mpesa"
+                                        form="checkout-form"
+                                        x-model="paymentMethod"
+                                        class="mt-1"
+                                    >
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
                                             <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                             </svg>
                                             <span class="font-semibold text-gray-900 dark:text-white">M-Pesa</span>
-                                            <span class="ml-2 px-2 py-0.5 bg-green-600 text-white text-xs font-bold rounded">RECOMMENDED</span>
                                         </div>
                                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Pay instantly with your M-Pesa mobile money</p>
 
@@ -157,32 +183,11 @@
                                                 form="checkout-form"
                                                 placeholder="254712345678"
                                                 pattern="254[0-9]{9}"
-                                                required
+                                                :required="paymentMethod === 'mpesa'"
                                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                                             >
                                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Enter your M-Pesa number (format: 254XXXXXXXXX)</p>
                                         </div>
-                                    </div>
-                                </label>
-
-                                <!-- Card Payment (Coming Soon) -->
-                                <label class="flex items-start gap-3 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-not-allowed opacity-60 relative">
-                                    <input
-                                        type="radio"
-                                        name="payment_method"
-                                        value="card"
-                                        disabled
-                                        class="mt-1"
-                                    >
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                                            </svg>
-                                            <span class="font-semibold text-gray-900 dark:text-white">Credit/Debit Card</span>
-                                            <span class="ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs font-bold rounded">COMING SOON</span>
-                                        </div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">Pay with Visa, Mastercard, or Verve</p>
                                     </div>
                                 </label>
 
@@ -193,39 +198,17 @@
                                         name="payment_method"
                                         value="bank_transfer"
                                         disabled
-                                        form="checkout-form"
-                                        x-model="paymentMethod"
                                         class="mt-1"
                                     >
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-1">
-                                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
                                             </svg>
                                             <span class="font-semibold text-gray-900 dark:text-white">Bank Transfer</span>
+                                            <span class="ml-2 px-2 py-0.5 bg-yellow-500 text-white text-xs font-bold rounded">COMING SOON</span>
                                         </div>
                                         <p class="text-sm text-gray-600 dark:text-gray-400">Transfer directly to our bank account</p>
-                                    </div>
-                                </label>
-
-                                <!-- Mobile Money -->
-                                <label class="flex items-start gap-3 p-4 border-2 border-gray-200 dark:border-gray-700 rounded-lg cursor-pointer hover:border-purple-500 dark:hover:border-purple-500 transition-colors" :class="{ 'border-purple-600 dark:border-purple-500 bg-purple-50 dark:bg-purple-900/20': paymentMethod === 'mobile_money' }">
-                                    <input
-                                        type="radio"
-                                        name="payment_method"
-                                        value="mobile_money"
-                                        form="checkout-form"
-                                        x-model="paymentMethod"
-                                        class="mt-1"
-                                    >
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2 mb-1">
-                                            <svg class="w-5 h-5 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                            </svg>
-                                            <span class="font-semibold text-gray-900 dark:text-white">Mobile Money</span>
-                                        </div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400">Pay with mobile money</p>
                                     </div>
                                 </label>
                             </div>
@@ -243,7 +226,7 @@
                                 class="mt-1"
                             >
                             <span class="text-sm text-gray-700 dark:text-gray-300">
-                                I agree to the <a href="#" class="text-purple-600 dark:text-purple-400 hover:underline">Terms of Service</a> and <a href="#" class="text-purple-600 dark:text-purple-400 hover:underline">Privacy Policy</a>
+                                I agree to the <a href="{{ route('terms') }}" class="text-purple-600 dark:text-purple-400 hover:underline">Terms of Service</a> and <a href="{{ route('privacy') }}" class="text-purple-600 dark:text-purple-400 hover:underline">Privacy Policy</a>
                             </span>
                         </label>
                     </div>
@@ -316,7 +299,12 @@
                                 <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                                 </svg>
-                                <span>Your payment information is secure and encrypted</span>
+                                <span>Your payment information is secure and encrypted. Powered by Paystack.</span>
+                            </div>
+
+                            <!-- Paystack Badge -->
+                            <div class="flex justify-center pt-2">
+                                <img src="https://cdn.paystack.co/assets/img/payment/secured-by-paystack.png" alt="Secured by Paystack" class="h-8 opacity-75">
                             </div>
                         </div>
                     </div>

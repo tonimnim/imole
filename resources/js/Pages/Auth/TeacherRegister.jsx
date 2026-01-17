@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Head, useForm, Link } from '@inertiajs/react';
-import { Button } from '../../Components/ui/button';
-import { Input } from '../../Components/ui/input';
-import { Label } from '../../Components/ui/label';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../Components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/card';
 import { Loader2 } from 'lucide-react';
 
 export default function TeacherRegister() {

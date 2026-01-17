@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }} - Transform Your Future with Quality Education</title>
     <meta name="description" content="Africa's premier learning platform offering world-class courses in agriculture, technology, and vocational skills. Join 10,000+ students learning today.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ asset('imolelogo.jpeg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('imolelogo.jpeg') }}">
+
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

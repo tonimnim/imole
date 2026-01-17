@@ -21,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // Exclude Paystack webhook from CSRF verification
+        $middleware->validateCsrfTokens(except: [
+            'paystack/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

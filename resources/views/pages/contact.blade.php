@@ -3,8 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contact Us - {{ config('app.name') }}</title>
-    <meta name="description" content="Get in touch with iMole Africa. We're here to help you on your learning journey.">
+    <x-seo
+        title="Contact Us"
+        description="Get in touch with Imole Africa. Contact us via email at info@imoleafrica.org, phone +254 789 378100, or visit us in Nairobi, Kenya."
+        keywords="contact Imole Africa, customer support, education help, Nairobi Kenya, email, phone"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Contact Us', 'url' => route('contact')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

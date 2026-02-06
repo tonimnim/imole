@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Terms of Service - {{ config('app.name') }}</title>
+    <x-seo
+        title="Terms of Service"
+        description="Read Imole Africa's terms of service. Understand the rules and guidelines for using our online learning platform and courses."
+        keywords="terms of service, user agreement, course access, Imole Africa terms"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Terms of Service', 'url' => route('terms')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

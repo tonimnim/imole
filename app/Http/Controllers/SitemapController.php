@@ -12,7 +12,7 @@ class SitemapController extends Controller
     {
         $courses = Course::query()
             ->where('is_published', true)
-            ->select(['slug', 'updated_at'])
+            ->select(['slug', 'title', 'thumbnail', 'updated_at'])
             ->orderBy('updated_at', 'desc')
             ->get();
 
@@ -27,6 +27,33 @@ class SitemapController extends Controller
         ])->render();
 
         return response($content)
-            ->header('Content-Type', 'application/xml');
+            ->header('Content-Type', 'application/xml')
+            ->header('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+    }
+
+    public function robots(): Response
+    {
+        $sitemapUrl = url('/sitemap.xml');
+
+        $content = implode("\n", [
+            'User-agent: *',
+            'Allow: /',
+            '',
+            'Disallow: /student/',
+            'Disallow: /teacher/',
+            'Disallow: /admin/',
+            'Disallow: /dashboard',
+            'Disallow: /cart',
+            'Disallow: /checkout',
+            'Disallow: /learn/',
+            'Disallow: /api/',
+            '',
+            "Sitemap: {$sitemapUrl}",
+            '',
+            'Crawl-delay: 1',
+        ]);
+
+        return response($content)
+            ->header('Content-Type', 'text/plain');
     }
 }

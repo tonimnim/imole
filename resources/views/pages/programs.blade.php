@@ -3,8 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Our Programs - {{ config('app.name') }}</title>
-    <meta name="description" content="Explore our comprehensive range of programs designed to empower Africans with skills for the future.">
+    <x-seo
+        title="Our Programs"
+        description="Explore Imole Africa's programs in Agriculture & Farming, Technology & IT, Business & Entrepreneurship, and Vocational Skills. Empowering Africans with skills for the future."
+        keywords="education programs, agriculture courses, technology training, business entrepreneurship, vocational skills, Africa programs"
+        :faq="[
+            ['question' => 'What programs does Imole Africa offer?', 'answer' => 'Imole Africa offers programs in Agriculture & Farming, Technology & IT, Business & Entrepreneurship, and Vocational Skills designed to empower Africans with practical skills.'],
+            ['question' => 'Are the programs suitable for beginners?', 'answer' => 'Yes, our programs cater to all levels from beginners to advanced learners, with structured curricula that progress from fundamentals to specialized skills.'],
+            ['question' => 'Do I get a certificate after completing a program?', 'answer' => 'Yes, upon successful completion of a program, you receive a certificate that validates your skills and knowledge.'],
+        ]"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Programs', 'url' => route('programs')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

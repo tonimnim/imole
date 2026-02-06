@@ -3,8 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $course->title }} - {{ config('app.name') }}</title>
-    <meta name="description" content="{{ $course->meta_description ?? $course->subtitle }}">
+    <x-seo
+        :title="$course->meta_title ?? $course->title"
+        :description="$course->meta_description ?? $course->subtitle ?? $course->description"
+        :image="$course->thumbnail ? asset('storage/' . $course->thumbnail) : null"
+        type="website"
+        :keywords="($course->category ? $course->category->name . ', ' : '') . $course->title . ', online course, Africa education, ' . ($course->level ?? 'beginner') . ' course'"
+        :author="$course->instructor?->name"
+        :publishedTime="$course->created_at?->toIso8601String()"
+        :modifiedTime="$course->updated_at?->toIso8601String()"
+        :course="$course"
+        :breadcrumbs="array_filter([
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Courses', 'url' => route('courses.index')],
+            $course->category ? ['name' => $course->category->name, 'url' => route('courses.index', ['category' => $course->category->slug])] : null,
+            ['name' => $course->title, 'url' => url()->current()],
+        ])"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

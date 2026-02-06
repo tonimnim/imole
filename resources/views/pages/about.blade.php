@@ -3,8 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>About Us - {{ config('app.name') }}</title>
-    <meta name="description" content="Learn about iMole Africa's mission to transform lives through quality education across Africa.">
+    <x-seo
+        title="About Us"
+        description="Learn about Imole Africa's mission to transform lives through quality education across Africa. 10,000+ students, 15+ countries, 98% success rate."
+        keywords="about Imole Africa, African education, online learning Africa, mission, vision, education platform"
+        :faq="[
+            ['question' => 'What is Imole Africa?', 'answer' => 'Imole Africa is Africa\'s premier online learning platform offering world-class courses in agriculture, technology, business, and vocational skills.'],
+            ['question' => 'What is Imole Africa\'s mission?', 'answer' => 'To democratize access to world-class education across Africa by providing affordable, high-quality online courses that empower individuals to achieve their full potential.'],
+            ['question' => 'What is Imole Africa\'s vision?', 'answer' => 'To become Africa\'s leading online learning platform, recognized for excellence in education delivery, innovation in teaching methods, and measurable impact on economic development.'],
+            ['question' => 'How many students has Imole Africa served?', 'answer' => 'Imole Africa has served over 10,000 active students across 15+ countries with a 98% success rate.'],
+        ]"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'About Us', 'url' => route('about')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Accessibility Statement - {{ config('app.name') }}</title>
+    <x-seo
+        title="Accessibility Statement"
+        description="Imole Africa's accessibility statement. Learn about our commitment to making our learning platform accessible to everyone, including people with disabilities."
+        keywords="accessibility, WCAG compliance, inclusive education, accessible learning, disability support"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Accessibility', 'url' => route('accessibility')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

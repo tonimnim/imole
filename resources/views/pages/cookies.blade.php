@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cookie Policy - {{ config('app.name') }}</title>
+    <x-seo
+        title="Cookie Policy"
+        description="Read Imole Africa's cookie policy. Learn about the types of cookies we use and how to manage your cookie preferences."
+        keywords="cookie policy, cookies, data tracking, browser cookies, Imole Africa cookies"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Cookie Policy', 'url' => route('cookies')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

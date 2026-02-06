@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Privacy Policy - {{ config('app.name') }}</title>
+    <x-seo
+        title="Privacy Policy"
+        description="Read Imole Africa's privacy policy. Learn how we collect, use, and protect your personal information when you use our learning platform."
+        keywords="privacy policy, data protection, personal information, Imole Africa privacy"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Privacy Policy', 'url' => route('privacy')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

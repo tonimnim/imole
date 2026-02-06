@@ -81,8 +81,10 @@ class CourseController extends Controller
 
     public function show(Request $request, Course $course): View
     {
-        // Load relationships
-        $course->load(['category', 'instructor', 'modules.lessons']);
+        // Load relationships (reviews with user for JSON-LD schema)
+        $course->load(['category', 'instructor', 'modules.lessons', 'reviews' => function ($query) {
+            $query->where('is_approved', true)->with('user')->latest()->limit(5);
+        }]);
 
         // Load review stats
         $course->loadCount(['enrollments', 'reviews']);

@@ -3,8 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Browse Courses - {{ config('app.name') }}</title>
-    <meta name="description" content="Browse thousands of courses taught by expert instructors. Learn new skills and advance your career.">
+    <x-seo
+        title="Browse Courses"
+        description="Browse thousands of courses taught by expert instructors across Africa. Learn agriculture, technology, business, and vocational skills to advance your career."
+        keywords="online courses, browse courses, Africa education, learn new skills, professional development, agriculture, technology, business, vocational training"
+        :courseList="$courses->items()"
+        :breadcrumbs="[
+            ['name' => 'Home', 'url' => url('/')],
+            ['name' => 'Courses', 'url' => route('courses.index')],
+        ]"
+    />
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|poppins:500,600,700" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])

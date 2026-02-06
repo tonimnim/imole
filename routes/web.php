@@ -9,8 +9,9 @@ use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// SEO - Sitemap
+// SEO - Sitemap & Robots
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');
 
 // Static Pages
 Route::get('/about', [PageController::class, 'about'])->name('about');

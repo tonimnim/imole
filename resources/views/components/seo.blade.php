@@ -12,6 +12,9 @@
     'course' => null,
     'category' => null,
     'breadcrumbs' => null,
+    'courseList' => null,
+    'faq' => null,
+    'pageType' => null,
 ])
 
 @php
@@ -56,9 +59,15 @@
 {{-- Canonical URL --}}
 <link rel="canonical" href="{{ $canonicalUrl }}">
 
-{{-- Favicon & Apple Touch Icon --}}
+{{-- Favicon, Apple Touch Icon & PWA --}}
 <link rel="icon" type="image/jpeg" href="{{ asset('imolelogo.jpeg') }}">
 <link rel="apple-touch-icon" href="{{ asset('imolelogo.jpeg') }}">
+<link rel="manifest" href="{{ asset('manifest.json') }}">
+<meta name="theme-color" content="#15803d">
+
+{{-- Hreflang --}}
+<link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
 {{-- Open Graph / Facebook --}}
 <meta property="og:type" content="{{ $type }}">
@@ -89,12 +98,13 @@
 {
     "@@context": "https://schema.org",
     "@graph": [
-        {{-- Organization Schema --}}
+        {{-- EducationalOrganization Schema --}}
         {
-            "@type": "Organization",
+            "@type": "EducationalOrganization",
             "@id": "{{ $siteUrl }}/#organization",
             "name": "{{ $siteName }}",
             "url": "{{ $siteUrl }}",
+            "description": "{{ $defaultDescription }}",
             "logo": {
                 "@type": "ImageObject",
                 "@id": "{{ $siteUrl }}/#logo",
@@ -118,6 +128,11 @@
                 "contactType": "customer service",
                 "areaServed": "Africa",
                 "availableLanguage": ["English", "Swahili", "French"]
+            },
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Nairobi",
+                "addressCountry": "KE"
             }
         },
         {{-- Website Schema --}}
@@ -151,7 +166,9 @@
             @if($course->instructor)
             "instructor": {
                 "@type": "Person",
-                "name": "{{ $course->instructor->name }}"
+                "name": "{{ $course->instructor->name }}",
+                "url": "{{ $siteUrl }}",
+                "worksFor": { "@id": "{{ $siteUrl }}/#organization" }
             },
             @endif
             @if($course->thumbnail)
@@ -162,18 +179,20 @@
                 "@type": "Thing",
                 "name": "{{ $course->category->name }}"
             },
+            "courseCode": "{{ $course->category->slug }}-{{ $course->id }}",
             @endif
             "educationalLevel": "{{ ucfirst($course->level ?? 'beginner') }}",
             @if($course->language)
             "inLanguage": "{{ $course->language }}",
             @endif
             @if($course->has_certificate)
+            "educationalCredentialAwarded": "Certificate of Completion",
+            @endif
             "hasCourseInstance": {
                 "@type": "CourseInstance",
                 "courseMode": "online",
                 "courseWorkload": "PT{{ $course->duration_minutes ?? 60 }}M"
             },
-            @endif
             @if($course->average_rating > 0)
             "aggregateRating": {
                 "@type": "AggregateRating",
@@ -183,6 +202,28 @@
                 "ratingCount": "{{ $course->reviews_count ?? 1 }}"
             },
             @endif
+            @if($course->relationLoaded('reviews') && $course->reviews->count() > 0)
+            "review": [
+                @foreach($course->reviews->take(5) as $review)
+                {
+                    "@type": "Review",
+                    "reviewRating": {
+                        "@type": "Rating",
+                        "ratingValue": "{{ $review->rating }}",
+                        "bestRating": "5"
+                    },
+                    @if($review->comment)
+                    "reviewBody": "{{ Str::limit(e($review->comment), 200) }}",
+                    @endif
+                    "author": {
+                        "@type": "Person",
+                        "name": "{{ $review->user->name ?? 'Student' }}"
+                    },
+                    "datePublished": "{{ $review->created_at->toIso8601String() }}"
+                }@if(!$loop->last),@endif
+                @endforeach
+            ],
+            @endif
             "offers": {
                 "@type": "Offer",
                 "price": "{{ $course->discount_price ?? $course->price ?? 0 }}",
@@ -191,6 +232,46 @@
                 "url": "{{ $canonicalUrl }}",
                 "validFrom": "{{ $course->created_at?->toIso8601String() }}"
             }
+        }
+        @endif
+        @if($courseList && count($courseList) > 0)
+        ,
+        {{-- ItemList Schema for Course Catalog --}}
+        {
+            "@type": "ItemList",
+            "@id": "{{ $canonicalUrl }}/#itemlist",
+            "name": "Courses at {{ $siteName }}",
+            "numberOfItems": {{ count($courseList) }},
+            "itemListElement": [
+                @foreach($courseList as $index => $item)
+                {
+                    "@type": "ListItem",
+                    "position": {{ $index + 1 }},
+                    "url": "{{ url('/courses/' . $item->slug) }}",
+                    "name": "{{ $item->title }}"
+                }@if(!$loop->last),@endif
+                @endforeach
+            ]
+        }
+        @endif
+        @if($faq && count($faq) > 0)
+        ,
+        {{-- FAQPage Schema --}}
+        {
+            "@type": "FAQPage",
+            "@id": "{{ $canonicalUrl }}/#faq",
+            "mainEntity": [
+                @foreach($faq as $index => $item)
+                {
+                    "@type": "Question",
+                    "name": "{{ $item['question'] }}",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "{{ $item['answer'] }}"
+                    }
+                }@if(!$loop->last),@endif
+                @endforeach
+            ]
         }
         @endif
         @if($breadcrumbs && count($breadcrumbs) > 0)

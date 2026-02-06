@@ -4,11 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title ?? 'Student Portal' }} - {{ config('app.name', 'Imole Africa') }}</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="{{ asset('imolelogo.jpeg') }}">
-    <link rel="apple-touch-icon" href="{{ asset('imolelogo.jpeg') }}">
+    {{-- SEO Component - noindex for authenticated student pages --}}
+    <x-seo
+        :title="$title ?? 'Student Portal'"
+        :description="$description ?? 'Access your courses, track progress, and manage your learning journey on Imole Africa.'"
+        :noindex="true"
+    />
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&family=poppins:500,600,700" rel="stylesheet" />

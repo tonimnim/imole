@@ -10,16 +10,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '../../../components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
-import { Progress } from '../../../components/ui/progress';
 import {
-    AreaChart, Area, BarChart, Bar, LineChart, Line, XAxis, YAxis,
-    CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell
+    AreaChart, Area, BarChart, Bar, XAxis, YAxis,
+    CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import {
     DollarSign, TrendingUp, TrendingDown, CreditCard, BookOpen,
-    Users, Download, Calendar, ArrowUpRight, ArrowDownRight,
-    Wallet, Target, Award
+    Users, Download, Calendar, ArrowUpRight, ArrowDownRight
 } from 'lucide-react';
 
 export default function Index({ stats, dailyRevenue, topCourses, topTeachers, period }) {
@@ -32,26 +29,26 @@ export default function Index({ stats, dailyRevenue, topCourses, topTeachers, pe
             style: 'currency',
             currency: 'KES',
             minimumFractionDigits: 0,
-        }).format(amount);
+        }).format(amount || 0);
     };
 
     const formatCompactCurrency = (value) => {
         if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
         if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
-        return value.toString();
+        return value?.toString() || '0';
     };
 
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white p-3 shadow-lg rounded-lg border">
+                <div className="bg-white p-3 shadow-lg rounded-lg border border-gray-200">
                     <p className="font-medium text-gray-900">{label}</p>
-                    <p className="text-emerald-600 font-bold">
+                    <p className="text-amber-600 font-bold">
                         {formatCurrency(payload[0].value)}
                     </p>
                     {payload[0].payload.transactions && (
                         <p className="text-gray-500 text-sm">
-                            {payload[0].payload.transactions} transactions
+                            {payload[0].payload.transactions} enrollments
                         </p>
                     )}
                 </div>
@@ -60,57 +57,12 @@ export default function Index({ stats, dailyRevenue, topCourses, topTeachers, pe
         return null;
     };
 
-    const statCards = [
-        {
-            title: 'Total Revenue',
-            value: formatCurrency(stats.total_revenue),
-            icon: DollarSign,
-            color: 'text-emerald-600',
-            bgColor: 'bg-emerald-50',
-            borderColor: 'border-emerald-100',
-            description: 'All-time earnings'
-        },
-        {
-            title: `${period}-Day Revenue`,
-            value: formatCurrency(stats.period_revenue),
-            icon: TrendingUp,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-50',
-            borderColor: 'border-blue-100',
-            change: stats.revenue_growth,
-            description: 'Selected period'
-        },
-        {
-            title: 'Total Transactions',
-            value: stats.total_transactions.toLocaleString(),
-            icon: CreditCard,
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-50',
-            borderColor: 'border-purple-100',
-            description: 'Completed payments'
-        },
-        {
-            title: 'Period Transactions',
-            value: stats.period_transactions.toLocaleString(),
-            icon: Wallet,
-            color: 'text-amber-600',
-            bgColor: 'bg-amber-50',
-            borderColor: 'border-amber-100',
-            description: 'In selected period'
-        },
-    ];
-
-    // Calculate average daily revenue
     const avgDailyRevenue = dailyRevenue.length > 0
         ? stats.period_revenue / dailyRevenue.length
         : 0;
 
-    // Find best performing day
     const bestDay = dailyRevenue.reduce((max, day) =>
         day.revenue > (max?.revenue || 0) ? day : max, null);
-
-    // Colors for pie chart
-    const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 
     return (
         <AdminLayout>
@@ -120,13 +72,13 @@ export default function Index({ stats, dailyRevenue, topCourses, topTeachers, pe
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Revenue Analytics</h1>
-                        <p className="mt-1 text-gray-500">Financial insights and performance metrics</p>
+                        <h1 className="text-2xl font-bold text-gray-900">Revenue Analytics</h1>
+                        <p className="text-gray-600">Financial insights and performance metrics</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <Select value={period} onValueChange={handlePeriodChange}>
-                            <SelectTrigger className="w-[140px]">
-                                <Calendar className="h-4 w-4 mr-2" />
+                            <SelectTrigger className="w-[140px] bg-white">
+                                <Calendar className="h-4 w-4 mr-2 text-gray-500" />
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -144,327 +96,261 @@ export default function Index({ stats, dailyRevenue, topCourses, topTeachers, pe
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {statCards.map((stat) => (
-                        <Card key={stat.title} className={`border ${stat.borderColor} shadow-sm bg-white hover:shadow-md transition-shadow`}>
-                            <CardContent className="p-5">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <p className="text-sm font-medium text-gray-500">{stat.title}</p>
-                                        <div className="flex items-baseline gap-2 mt-1">
-                                            <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                                            {stat.change !== undefined && (
-                                                <span className={`text-xs font-medium flex items-center ${stat.change >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                                                    {stat.change >= 0 ? (
-                                                        <ArrowUpRight className="h-3 w-3" />
-                                                    ) : (
-                                                        <ArrowDownRight className="h-3 w-3" />
-                                                    )}
-                                                    {Math.abs(stat.change)}%
-                                                </span>
-                                            )}
-                                        </div>
-                                        <p className="text-xs text-gray-400 mt-1">{stat.description}</p>
-                                    </div>
-                                    <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                                        <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                                    </div>
+                    <Card className="bg-white border border-gray-200">
+                        <CardContent className="p-5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600">Total Revenue</p>
+                                    <p className="text-2xl font-bold text-gray-900 mt-1">
+                                        {formatCurrency(stats.total_revenue)}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-1">All-time earnings</p>
                                 </div>
-                            </CardContent>
-                        </Card>
-                    ))}
+                                <div className="p-3 bg-amber-50 rounded-lg">
+                                    <DollarSign className="h-5 w-5 text-amber-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-white border border-gray-200">
+                        <CardContent className="p-5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600">{period}-Day Revenue</p>
+                                    <div className="flex items-baseline gap-2 mt-1">
+                                        <p className="text-2xl font-bold text-gray-900">
+                                            {formatCurrency(stats.period_revenue)}
+                                        </p>
+                                        {stats.revenue_growth !== 0 && (
+                                            <span className={`text-xs font-medium flex items-center ${stats.revenue_growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                {stats.revenue_growth >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                                                {Math.abs(stats.revenue_growth)}%
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">Selected period</p>
+                                </div>
+                                <div className="p-3 bg-blue-50 rounded-lg">
+                                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-white border border-gray-200">
+                        <CardContent className="p-5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600">Total Enrollments</p>
+                                    <p className="text-2xl font-bold text-gray-900 mt-1">
+                                        {stats.total_transactions.toLocaleString()}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-1">All-time</p>
+                                </div>
+                                <div className="p-3 bg-purple-50 rounded-lg">
+                                    <CreditCard className="h-5 w-5 text-purple-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-white border border-gray-200">
+                        <CardContent className="p-5">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-gray-600">Period Enrollments</p>
+                                    <p className="text-2xl font-bold text-gray-900 mt-1">
+                                        {stats.period_transactions.toLocaleString()}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-1">In selected period</p>
+                                </div>
+                                <div className="p-3 bg-gray-100 rounded-lg">
+                                    <Users className="h-5 w-5 text-gray-600" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 {/* Revenue Chart */}
-                <Card className="border-0 shadow-sm bg-white">
+                <Card className="bg-white border border-gray-200">
                     <CardHeader>
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <CardTitle className="text-lg">Revenue Overview</CardTitle>
-                                <CardDescription>Daily revenue for the last {period} days</CardDescription>
-                            </div>
-                            <div className="flex items-center gap-4 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
-                                    <span className="text-gray-600">Revenue</span>
-                                </div>
-                            </div>
-                        </div>
+                        <CardTitle className="text-lg text-gray-900">Revenue Overview</CardTitle>
+                        <CardDescription className="text-gray-600">
+                            Daily revenue for the last {period} days
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-80">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={dailyRevenue} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                                    <defs>
-                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                                            <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                                        </linearGradient>
-                                    </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                                    <XAxis
-                                        dataKey="date"
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#6b7280', fontSize: 12 }}
-                                    />
-                                    <YAxis
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#6b7280', fontSize: 12 }}
-                                        tickFormatter={formatCompactCurrency}
-                                    />
-                                    <Tooltip content={<CustomTooltip />} />
-                                    <Area
-                                        type="monotone"
-                                        dataKey="revenue"
-                                        stroke="#10b981"
-                                        strokeWidth={2}
-                                        fillOpacity={1}
-                                        fill="url(#colorRevenue)"
-                                    />
-                                </AreaChart>
-                            </ResponsiveContainer>
+                        <div className="h-72">
+                            {dailyRevenue.length > 0 ? (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={dailyRevenue} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                        <defs>
+                                            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.2}/>
+                                                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                        <XAxis
+                                            dataKey="date"
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                        />
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#6b7280', fontSize: 12 }}
+                                            tickFormatter={formatCompactCurrency}
+                                        />
+                                        <Tooltip content={<CustomTooltip />} />
+                                        <Area
+                                            type="monotone"
+                                            dataKey="revenue"
+                                            stroke="#f59e0b"
+                                            strokeWidth={2}
+                                            fillOpacity={1}
+                                            fill="url(#colorRevenue)"
+                                        />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="h-full flex items-center justify-center text-gray-500">
+                                    <div className="text-center">
+                                        <DollarSign className="h-10 w-10 mx-auto mb-2 opacity-30" />
+                                        <p>No revenue data for this period</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Quick Stats */}
+                {/* Summary Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="border-0 shadow-sm bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
+                    <Card className="bg-white border border-gray-200">
                         <CardContent className="p-5">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-emerald-100 text-sm">Average Daily</p>
-                                    <p className="text-2xl font-bold mt-1">{formatCurrency(avgDailyRevenue)}</p>
-                                </div>
-                                <Target className="h-10 w-10 text-white/30" />
-                            </div>
+                            <p className="text-sm text-gray-600">Average Daily Revenue</p>
+                            <p className="text-xl font-bold text-gray-900 mt-1">
+                                {formatCurrency(avgDailyRevenue)}
+                            </p>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
+                    <Card className="bg-white border border-gray-200">
                         <CardContent className="p-5">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-blue-100 text-sm">Best Day</p>
-                                    <p className="text-2xl font-bold mt-1">
-                                        {bestDay ? formatCurrency(bestDay.revenue) : 'N/A'}
-                                    </p>
-                                    {bestDay && <p className="text-blue-200 text-xs mt-1">{bestDay.date}</p>}
-                                </div>
-                                <Award className="h-10 w-10 text-white/30" />
-                            </div>
+                            <p className="text-sm text-gray-600">Best Performing Day</p>
+                            <p className="text-xl font-bold text-gray-900 mt-1">
+                                {bestDay ? formatCurrency(bestDay.revenue) : 'N/A'}
+                            </p>
+                            {bestDay && <p className="text-xs text-gray-500 mt-1">{bestDay.date}</p>}
                         </CardContent>
                     </Card>
 
-                    <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-500 to-pink-600 text-white">
+                    <Card className="bg-white border border-gray-200">
                         <CardContent className="p-5">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-purple-100 text-sm">Growth</p>
-                                    <p className="text-2xl font-bold mt-1">
-                                        {stats.revenue_growth >= 0 ? '+' : ''}{stats.revenue_growth}%
-                                    </p>
-                                    <p className="text-purple-200 text-xs mt-1">vs previous period</p>
-                                </div>
-                                {stats.revenue_growth >= 0 ? (
-                                    <TrendingUp className="h-10 w-10 text-white/30" />
-                                ) : (
-                                    <TrendingDown className="h-10 w-10 text-white/30" />
-                                )}
-                            </div>
+                            <p className="text-sm text-gray-600">Growth vs Previous Period</p>
+                            <p className={`text-xl font-bold mt-1 ${stats.revenue_growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                {stats.revenue_growth >= 0 ? '+' : ''}{stats.revenue_growth}%
+                            </p>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Top Courses & Teachers */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Top Earning Courses */}
-                    <Card className="border-0 shadow-sm bg-white">
+                    <Card className="bg-white border border-gray-200">
                         <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <CardTitle className="text-lg flex items-center gap-2">
-                                        <BookOpen className="h-5 w-5 text-amber-500" />
-                                        Top Earning Courses
-                                    </CardTitle>
-                                    <CardDescription>Best performing courses by revenue</CardDescription>
-                                </div>
-                            </div>
+                            <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                                <BookOpen className="h-5 w-5 text-amber-500" />
+                                Top Earning Courses
+                            </CardTitle>
+                            <CardDescription className="text-gray-600">
+                                Best performing courses by revenue
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             {topCourses.length > 0 ? (
                                 <div className="space-y-4">
-                                    {topCourses.map((course, index) => {
-                                        const maxRevenue = topCourses[0]?.revenue || 1;
-                                        const percentage = (course.revenue / maxRevenue) * 100;
-
-                                        return (
-                                            <div key={index} className="space-y-2">
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                                                        index === 0 ? 'bg-amber-100 text-amber-700' :
-                                                        index === 1 ? 'bg-gray-100 text-gray-700' :
-                                                        index === 2 ? 'bg-orange-100 text-orange-700' :
-                                                        'bg-gray-50 text-gray-500'
-                                                    }`}>
-                                                        {index + 1}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="font-medium text-gray-900 truncate text-sm">
-                                                            {course.course}
-                                                        </p>
-                                                        <p className="text-xs text-gray-500">
-                                                            {course.sales} sales
-                                                        </p>
-                                                    </div>
-                                                    <p className="font-bold text-emerald-600 text-sm">
-                                                        {formatCurrency(course.revenue)}
-                                                    </p>
-                                                </div>
-                                                <div className="ml-11">
-                                                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                                        <div
-                                                            className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full transition-all"
-                                                            style={{ width: `${percentage}%` }}
-                                                        />
-                                                    </div>
-                                                </div>
+                                    {topCourses.map((course, index) => (
+                                        <div key={index} className="flex items-center gap-3">
+                                            <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium text-gray-700">
+                                                {index + 1}
                                             </div>
-                                        );
-                                    })}
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-medium text-gray-900 truncate text-sm">
+                                                    {course.course}
+                                                </p>
+                                                <p className="text-xs text-gray-500">{course.sales} sales</p>
+                                            </div>
+                                            <p className="font-semibold text-gray-900 text-sm">
+                                                {formatCurrency(course.revenue)}
+                                            </p>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : (
                                 <div className="text-center py-8 text-gray-500">
                                     <BookOpen className="h-10 w-10 mx-auto mb-2 opacity-30" />
-                                    <p className="font-medium">No course data</p>
-                                    <p className="text-sm">Revenue data will appear here</p>
+                                    <p className="font-medium text-gray-700">No course data</p>
+                                    <p className="text-sm text-gray-500">Revenue data will appear here</p>
                                 </div>
                             )}
                         </CardContent>
                     </Card>
 
-                    {/* Top Earning Teachers */}
-                    <Card className="border-0 shadow-sm bg-white">
+                    <Card className="bg-white border border-gray-200">
                         <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <CardTitle className="text-lg flex items-center gap-2">
-                                        <Users className="h-5 w-5 text-emerald-500" />
-                                        Top Earning Teachers
-                                    </CardTitle>
-                                    <CardDescription>Instructors by total revenue</CardDescription>
-                                </div>
-                            </div>
+                            <CardTitle className="text-lg text-gray-900 flex items-center gap-2">
+                                <Users className="h-5 w-5 text-amber-500" />
+                                Top Earning Teachers
+                            </CardTitle>
+                            <CardDescription className="text-gray-600">
+                                Instructors by total revenue
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             {topTeachers.length > 0 ? (
                                 <div className="space-y-4">
-                                    {topTeachers.map((teacher, index) => {
-                                        const maxRevenue = topTeachers[0]?.revenue || 1;
-                                        const percentage = (teacher.revenue / maxRevenue) * 100;
-
-                                        return (
-                                            <div key={index} className="space-y-2">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="relative">
-                                                        {teacher.avatar ? (
-                                                            <img
-                                                                src={teacher.avatar}
-                                                                alt={teacher.name}
-                                                                className="h-10 w-10 rounded-full object-cover border-2 border-white shadow-sm"
-                                                            />
-                                                        ) : (
-                                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold shadow-sm">
-                                                                {teacher.name.charAt(0)}
-                                                            </div>
-                                                        )}
-                                                        {index < 3 && (
-                                                            <div className={`absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold ${
-                                                                index === 0 ? 'bg-amber-400 text-amber-900' :
-                                                                index === 1 ? 'bg-gray-300 text-gray-700' :
-                                                                'bg-orange-300 text-orange-800'
-                                                            }`}>
-                                                                {index + 1}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="font-medium text-gray-900 truncate text-sm">
-                                                            {teacher.name}
-                                                        </p>
-                                                        <p className="text-xs text-gray-500">
-                                                            {teacher.courses} {teacher.courses === 1 ? 'course' : 'courses'}
-                                                        </p>
-                                                    </div>
-                                                    <p className="font-bold text-emerald-600 text-sm">
-                                                        {formatCurrency(teacher.revenue)}
-                                                    </p>
+                                    {topTeachers.map((teacher, index) => (
+                                        <div key={index} className="flex items-center gap-3">
+                                            {teacher.avatar ? (
+                                                <img
+                                                    src={teacher.avatar}
+                                                    alt={teacher.name}
+                                                    className="h-9 w-9 rounded-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="h-9 w-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-medium text-sm">
+                                                    {teacher.name.charAt(0)}
                                                 </div>
-                                                <div className="ml-13 pl-10">
-                                                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                                        <div
-                                                            className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all"
-                                                            style={{ width: `${percentage}%` }}
-                                                        />
-                                                    </div>
-                                                </div>
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-medium text-gray-900 truncate text-sm">
+                                                    {teacher.name}
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    {teacher.courses} {teacher.courses === 1 ? 'course' : 'courses'}
+                                                </p>
                                             </div>
-                                        );
-                                    })}
+                                            <p className="font-semibold text-gray-900 text-sm">
+                                                {formatCurrency(teacher.revenue)}
+                                            </p>
+                                        </div>
+                                    ))}
                                 </div>
                             ) : (
                                 <div className="text-center py-8 text-gray-500">
                                     <Users className="h-10 w-10 mx-auto mb-2 opacity-30" />
-                                    <p className="font-medium">No teacher data</p>
-                                    <p className="text-sm">Revenue data will appear here</p>
+                                    <p className="font-medium text-gray-700">No teacher data</p>
+                                    <p className="text-sm text-gray-500">Revenue data will appear here</p>
                                 </div>
                             )}
                         </CardContent>
                     </Card>
                 </div>
-
-                {/* Transactions Chart */}
-                <Card className="border-0 shadow-sm bg-white">
-                    <CardHeader>
-                        <CardTitle className="text-lg">Daily Transactions</CardTitle>
-                        <CardDescription>Number of successful transactions per day</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-64">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={dailyRevenue} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
-                                    <XAxis
-                                        dataKey="date"
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#6b7280', fontSize: 12 }}
-                                    />
-                                    <YAxis
-                                        axisLine={false}
-                                        tickLine={false}
-                                        tick={{ fill: '#6b7280', fontSize: 12 }}
-                                    />
-                                    <Tooltip
-                                        contentStyle={{
-                                            backgroundColor: 'white',
-                                            border: '1px solid #e5e7eb',
-                                            borderRadius: '8px',
-                                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                                        }}
-                                        formatter={(value) => [value, 'Transactions']}
-                                    />
-                                    <Bar
-                                        dataKey="transactions"
-                                        fill="#8b5cf6"
-                                        radius={[4, 4, 0, 0]}
-                                    />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </CardContent>
-                </Card>
             </div>
         </AdminLayout>
     );

@@ -56,7 +56,7 @@
                     <p class="text-gray-700 dark:text-gray-300 mb-4">We welcome your feedback on the accessibility of iMole Africa. If you encounter any accessibility barriers or have suggestions for improvement, please contact us:</p>
                     <ul class="list-none text-gray-700 dark:text-gray-300 space-y-2">
                         <li><strong>Email:</strong> <a href="mailto:accessibility@imoleafrica.org" class="text-green-600 dark:text-green-400 hover:underline">accessibility@imoleafrica.org</a></li>
-                        <li><strong>Phone:</strong> <a href="tel:+254700000000" class="text-green-600 dark:text-green-400 hover:underline">+254 700 000 000</a></li>
+                        <li><strong>Phone:</strong> <a href="tel:+254789378100" class="text-green-600 dark:text-green-400 hover:underline">+254 789 378100</a></li>
                     </ul>
                     <p class="text-gray-700 dark:text-gray-300 mt-4">We aim to respond to accessibility feedback within 5 business days.</p>
                 </section>

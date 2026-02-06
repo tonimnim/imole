@@ -138,7 +138,7 @@
                                 </div>
                                 <div>
                                     <h3 class="font-bold text-gray-900 dark:text-white mb-1">Phone</h3>
-                                    <a href="tel:+254700000000" class="text-green-600 dark:text-green-400 hover:underline">+254 700 000 000</a>
+                                    <a href="tel:+254789378100" class="text-green-600 dark:text-green-400 hover:underline">+254 789 378100</a>
                                 </div>
                             </div>
 

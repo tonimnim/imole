@@ -88,7 +88,7 @@
                                             name="phone"
                                             value="{{ old('phone') }}"
                                             required
-                                            placeholder="+254 700 000 000"
+                                            placeholder="+254 789 378100"
                                             class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         >
                                     </div>

@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google-site-verification" content="_l5wRBckC9ebtuiC_JnvCK7JyOTSn2cvH5iy07N2fx4" />
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 

@@ -54,9 +54,9 @@ class RegisteredUserController extends Controller
 
         // Redirect based on role
         if ($role === 'teacher') {
-            return redirect('/teacher');
+            return redirect()->route('teacher.dashboard');
         }
 
-        return redirect('/my');
+        return redirect()->route('student.dashboard');
     }
 }

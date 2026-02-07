@@ -6,29 +6,29 @@ use App\Http\Requests\LessonStoreRequest;
 use App\Http\Requests\LessonUpdateRequest;
 use App\Jobs\ProcessLessonVideo;
 use App\Models\Lesson;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class LessonController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
-        $lessons = Lesson::all();
+        $lessons = Lesson::query()->paginate(20);
 
         return view('lesson.index', [
             'lessons' => $lessons,
         ]);
     }
 
-    public function show(Request $request, Lesson $lesson): Response
+    public function show(Lesson $lesson): View
     {
-        $lesson = Lesson::find($id);
-
         return view('lesson.show', [
             'lesson' => $lesson,
         ]);
     }
 
-    public function store(LessonStoreRequest $request): Response
+    public function store(LessonStoreRequest $request): RedirectResponse
     {
         $lesson = Lesson::create($request->validated());
 
@@ -37,10 +37,8 @@ class LessonController extends Controller
         return redirect()->route('lesson.show', ['lesson' => $lesson]);
     }
 
-    public function update(LessonUpdateRequest $request, Lesson $lesson): Response
+    public function update(LessonUpdateRequest $request, Lesson $lesson): RedirectResponse
     {
-        $lesson = Lesson::find($id);
-
         $lesson->update($request->validated());
 
         return redirect()->route('lesson.show', ['lesson' => $lesson]);

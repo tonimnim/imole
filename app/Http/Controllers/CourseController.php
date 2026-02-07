@@ -192,6 +192,10 @@ class CourseController extends Controller
 
     public function destroy(Request $request, Course $course): RedirectResponse
     {
+        if ($course->instructor_id !== auth()->id() && ! auth()->user()->hasRole('admin')) {
+            abort(403);
+        }
+
         $course->delete();
 
         return redirect()->route('course.index');

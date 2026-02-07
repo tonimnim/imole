@@ -4,20 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\QuizStoreRequest;
 use App\Models\Quiz;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class QuizController extends Controller
 {
-    public function show(Request $request, Quiz $quiz): Response
+    public function show(Quiz $quiz): View
     {
-        $quiz = Quiz::find($id);
-
         return view('quiz.show', [
             'quiz' => $quiz,
         ]);
     }
 
-    public function store(QuizStoreRequest $request): Response
+    public function store(QuizStoreRequest $request): RedirectResponse
     {
         $quiz = Quiz::create($request->validated());
 

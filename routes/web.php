@@ -3,7 +3,6 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Teacher\TeacherDashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -35,101 +34,98 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Teacher Portal Routes (Inertia + React)
-    Route::prefix('teacher')->name('teacher.')->group(function () {
+    Route::middleware('role:teacher')->group(function () {
+        Route::prefix('teacher')->name('teacher.')->group(function () {
 
-        // Dashboard
-        Route::get('/dashboard', [\App\Http\Controllers\Teacher\TeacherDashboardController::class, 'index'])
-            ->name('dashboard'); // Result: route('teacher.dashboard')
+            // Dashboard
+            Route::get('/dashboard', [\App\Http\Controllers\Teacher\TeacherDashboardController::class, 'index'])
+                ->name('dashboard');
 
-        // Redirect /teacher to /teacher/dashboard
-        Route::get('/', function () {
-            return redirect()->route('teacher.dashboard');
+            // Redirect /teacher to /teacher/dashboard
+            Route::get('/', function () {
+                return redirect()->route('teacher.dashboard');
+            });
+
         });
 
+        // Teacher Courses (Vue.js)
+        Route::get('/teacher/courses', [App\Http\Controllers\Teacher\TeacherCoursesController::class, 'index'])
+            ->name('teacher.courses');
+        Route::get('/teacher/courses/create', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'create'])
+            ->name('teacher.courses.create');
+        Route::post('/teacher/courses', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'store'])
+            ->name('teacher.courses.store');
+        Route::get('/teacher/courses/{course:id}/edit', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'edit'])
+            ->name('teacher.courses.edit');
+        Route::put('/teacher/courses/{course:id}', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'update'])
+            ->name('teacher.courses.update');
+
+        // Teacher Curriculum Builder
+        Route::get('/teacher/courses/{course:id}/curriculum', [App\Http\Controllers\Teacher\CurriculumPageController::class, 'show'])
+            ->name('teacher.curriculum');
+
+        // Teacher Content Management Pages
+        Route::get('/teacher/modules', [App\Http\Controllers\Teacher\TeacherModulesController::class, 'index'])
+            ->name('teacher.modules');
+        Route::get('/teacher/lessons', [App\Http\Controllers\Teacher\TeacherLessonsController::class, 'index'])
+            ->name('teacher.lessons');
+        Route::get('/teacher/assignments', [App\Http\Controllers\Teacher\TeacherAssignmentsController::class, 'index'])
+            ->name('teacher.assignments');
+        Route::get('/teacher/quizzes', [App\Http\Controllers\Teacher\TeacherQuizzesController::class, 'index'])
+            ->name('teacher.quizzes');
+        Route::get('/teacher/questions', [App\Http\Controllers\Teacher\TeacherQuestionsController::class, 'index'])
+            ->name('teacher.questions');
+
+        // Teacher Student & Engagement Pages
+        Route::get('/teacher/students', [App\Http\Controllers\Teacher\TeacherStudentsController::class, 'index'])
+            ->name('teacher.students');
+        Route::get('/teacher/reviews', [App\Http\Controllers\Teacher\TeacherReviewsController::class, 'index'])
+            ->name('teacher.reviews');
+
+        // Teacher Announcements (CRUD)
+        Route::get('/teacher/announcements', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'index'])
+            ->name('teacher.announcements');
+        Route::post('/teacher/announcements', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'store'])
+            ->name('teacher.announcements.store');
+        Route::put('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'update'])
+            ->name('teacher.announcements.update');
+        Route::delete('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'destroy'])
+            ->name('teacher.announcements.destroy');
+
+        // Teacher Notifications
+        Route::get('/teacher/notifications', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'index'])
+            ->name('teacher.notifications');
+        Route::post('/teacher/notifications/{announcement}/read', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'markAsRead'])
+            ->name('teacher.notifications.read');
+        Route::post('/teacher/notifications/read-all', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'markAllAsRead'])
+            ->name('teacher.notifications.read-all');
+
+        // Teacher Certificates
+        Route::get('/teacher/certificates', [App\Http\Controllers\Teacher\TeacherCertificatesController::class, 'index'])
+            ->name('teacher.certificates');
+
+        // Teacher Profile
+        Route::get('/teacher/profile', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'index'])
+            ->name('teacher.profile');
+        Route::put('/teacher/profile', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'update'])
+            ->name('teacher.profile.update');
+        Route::post('/teacher/profile/avatar', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'updateAvatar'])
+            ->name('teacher.profile.avatar');
+        Route::delete('/teacher/profile/avatar', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'removeAvatar'])
+            ->name('teacher.profile.avatar.remove');
+
+        // Teacher Quiz Builder
+        Route::get('/teacher/quiz-builder', [App\Http\Controllers\Teacher\QuizBuilderPageController::class, 'index'])
+            ->name('teacher.quiz-builder');
     });
 
-    // Old Teacher Dashboard (Commented out for reference or deletion)
-    // Route::get('/teacher', [TeacherDashboardController::class, 'index'])->name('teacher.dashboard.old');
-
-    // Teacher Courses (Vue.js)
-
-    // Teacher Courses (Vue.js)
-    Route::get('/teacher/courses', [App\Http\Controllers\Teacher\TeacherCoursesController::class, 'index'])
-        ->name('teacher.courses');
-    Route::get('/teacher/courses/create', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'create'])
-        ->name('teacher.courses.create');
-    Route::post('/teacher/courses', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'store'])
-        ->name('teacher.courses.store');
-    Route::get('/teacher/courses/{course:id}/edit', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'edit'])
-        ->name('teacher.courses.edit');
-    Route::put('/teacher/courses/{course:id}', [App\Http\Controllers\Teacher\TeacherCourseFormController::class, 'update'])
-        ->name('teacher.courses.update');
-
-    // Teacher Curriculum Builder
-    Route::get('/teacher/courses/{course:id}/curriculum', [App\Http\Controllers\Teacher\CurriculumPageController::class, 'show'])
-        ->name('teacher.curriculum');
-
-    // Teacher Content Management Pages
-    Route::get('/teacher/modules', [App\Http\Controllers\Teacher\TeacherModulesController::class, 'index'])
-        ->name('teacher.modules');
-    Route::get('/teacher/lessons', [App\Http\Controllers\Teacher\TeacherLessonsController::class, 'index'])
-        ->name('teacher.lessons');
-    Route::get('/teacher/assignments', [App\Http\Controllers\Teacher\TeacherAssignmentsController::class, 'index'])
-        ->name('teacher.assignments');
-    Route::get('/teacher/quizzes', [App\Http\Controllers\Teacher\TeacherQuizzesController::class, 'index'])
-        ->name('teacher.quizzes');
-    Route::get('/teacher/questions', [App\Http\Controllers\Teacher\TeacherQuestionsController::class, 'index'])
-        ->name('teacher.questions');
-
-    // Teacher Student & Engagement Pages
-    Route::get('/teacher/students', [App\Http\Controllers\Teacher\TeacherStudentsController::class, 'index'])
-        ->name('teacher.students');
-    Route::get('/teacher/reviews', [App\Http\Controllers\Teacher\TeacherReviewsController::class, 'index'])
-        ->name('teacher.reviews');
-
-    // Teacher Announcements (CRUD)
-    Route::get('/teacher/announcements', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'index'])
-        ->name('teacher.announcements');
-    Route::post('/teacher/announcements', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'store'])
-        ->name('teacher.announcements.store');
-    Route::put('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'update'])
-        ->name('teacher.announcements.update');
-    Route::delete('/teacher/announcements/{announcement}', [App\Http\Controllers\Teacher\TeacherAnnouncementsController::class, 'destroy'])
-        ->name('teacher.announcements.destroy');
-
-    // Teacher Notifications
-    Route::get('/teacher/notifications', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'index'])
-        ->name('teacher.notifications');
-    Route::post('/teacher/notifications/{announcement}/read', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'markAsRead'])
-        ->name('teacher.notifications.read');
-    Route::post('/teacher/notifications/read-all', [App\Http\Controllers\Teacher\TeacherNotificationsController::class, 'markAllAsRead'])
-        ->name('teacher.notifications.read-all');
-
-    // Teacher Certificates
-    Route::get('/teacher/certificates', [App\Http\Controllers\Teacher\TeacherCertificatesController::class, 'index'])
-        ->name('teacher.certificates');
-
-    // Teacher Profile
-    Route::get('/teacher/profile', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'index'])
-        ->name('teacher.profile');
-    Route::put('/teacher/profile', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'update'])
-        ->name('teacher.profile.update');
-    Route::post('/teacher/profile/avatar', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'updateAvatar'])
-        ->name('teacher.profile.avatar');
-    Route::delete('/teacher/profile/avatar', [App\Http\Controllers\Teacher\TeacherProfileController::class, 'removeAvatar'])
-        ->name('teacher.profile.avatar.remove');
-
-    // Teacher Quiz Builder
-    Route::get('/teacher/quiz-builder', [App\Http\Controllers\Teacher\QuizBuilderPageController::class, 'index'])
-        ->name('teacher.quiz-builder');
-
-    // --- RESTORED STUDENT ROUTES ---
+    // Profile Routes (any authenticated user)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Student Portal Routes
-    Route::prefix('student')->name('student.')->group(function () {
+    Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Student\StudentDashboardController::class, 'dashboard'])->name('dashboard');
         Route::get('/my-courses', [App\Http\Controllers\Student\StudentDashboardController::class, 'myCourses'])->name('my-courses');
         Route::get('/certificates', [App\Http\Controllers\Student\StudentDashboardController::class, 'certificates'])->name('certificates');
@@ -157,7 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
 
         return view('student.certificate', compact('certificate'));
-    })->middleware('auth')->name('certificate.view');
+    })->name('certificate.view');
 
     Route::get('/certificate/{certificate}/download', function (\App\Models\Certificate $certificate) {
         if ($certificate->user_id !== auth()->id()) {
@@ -170,7 +166,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->setOption('isRemoteEnabled', true);
 
         return $pdf->download('certificate-'.$certificate->certificate_number.'.pdf');
-    })->middleware('auth')->name('certificate.download');
+    })->name('certificate.download');
 
     // Cart Routes
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
@@ -191,7 +187,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Admin Portal Routes (Inertia + React)
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
 
